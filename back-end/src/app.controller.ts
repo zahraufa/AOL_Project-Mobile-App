@@ -10,5 +10,6 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  HAHhahaHA
+//dummykedua
+//aduh aduh
 }
