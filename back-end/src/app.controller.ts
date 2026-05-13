@@ -9,4 +9,12 @@ export class AppController {
   getHello(): string {
     return this.appService.getHello();
   }
+  dfodncvosd
+  sackdnv
+  cskdvjdovjd
+
+  @Get()
+  getHello(): string {
+    return this.appService.getHello();
+  }
 }
