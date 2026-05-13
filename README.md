@@ -22,49 +22,14 @@ Pengguna dapat membandingkan EO berdasarkan:
 - Kelengkapan layanan
 - Pax yang disediakan
 
-4. Fitur Chat
-Pengguna bisa berkomunikasi langsung dengan EO melalui fitur chat dalam aplikasi
-
-5. Profile EO dan Katalog
+4. Profile EO dan Katalog
 Pengguna dapat melihat:
 - Data EO dan ulasan pengguna lain
 - Tanggal yang tersedia
 - Paket yang tersedia
 
-6. User Profile
+5. User Profile
 Pengguna dapat mengatur informasi pribadi dan jadwal event mereka
-
-## Instruksi Instalasi
-
-1. Pastikan sudah menginstall:
-- Flutter SDK
-- Dart SDK
-- Android Studio
-- Android SDK
-- VS Code
-
-2. Cek Instalasi dengan:
- ```bash
-flutter doctor
-```
-
-3. Clone Repository
- ```bash
-git clone <repository-url>
-```
-
-4. Masuk ke folder project
- ```bash
-cd AOL-Project_Mobile_App
-```
-
-5. Install dependencies:
-  ```bash
-flutter pub get
-```
-
-6. Hubungkan dengan aplikasi android lalu jalankan:
  ```bash
 flutter run
 ```
-
