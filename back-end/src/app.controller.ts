@@ -10,4 +10,5 @@ export class AppController {
     return this.appService.getHello();
   }
   //DummyJam6.36
+  //beberapa menit kemudian aku menambahkan ini di jam 7.14
 }
