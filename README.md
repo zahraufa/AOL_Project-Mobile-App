@@ -39,6 +39,8 @@ Pengguna dapat mengatur informasi pribadi dan jadwal event mereka
 1. Pastikan sudah menginstall:
 - Flutter SDK
 - Dart SDK
+- Android Studio
+- Android SDK
 - VS Code
 
 2. Cek Instalasi dengan:
