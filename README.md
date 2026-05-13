@@ -21,16 +21,13 @@ Pengguna dapat membandingkan EO berdasarkan:
 - Kelengkapan layanan
 - Pax yang disediakan
 
-4. Fitur Chat
-Pengguna bisa berkomunikasi langsung dengan EO melalui fitur chat dalam aplikasi
-
-5. Profile EO dan Katalog
+4. Profile EO dan Katalog
 Pengguna dapat melihat:
 - Data EO dan ulasan pengguna lain
 - Tanggal yang tersedia
 - Paket yang tersedia
 
-6. User Profile
+5. User Profile
 Pengguna dapat mengatur informasi pribadi dan jadwal event mereka
 
 ## Instruksi Instalasi
@@ -38,10 +35,8 @@ Pengguna dapat mengatur informasi pribadi dan jadwal event mereka
 1. Pastikan sudah menginstall:
 - Flutter SDK
 - Dart SDK
-
 - Android Studio
 - Android SDK
-
 - VS Code
 
 2. Cek Instalasi dengan:
@@ -68,4 +63,3 @@ flutter pub get
  ```bash
 flutter run
 ```
-
