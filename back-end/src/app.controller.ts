@@ -11,4 +11,6 @@ export class AppController {
   }
   //DummyJam6.36
   //beberapa menit kemudian aku menambahkan ini di jam 7.14
+
+  //aku pake merge manual krna pakai brnach lama dan skrng adalah 7.20 yey
 }
