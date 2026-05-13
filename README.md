@@ -30,6 +30,3 @@ Pengguna dapat melihat:
 
 5. User Profile
 Pengguna dapat mengatur informasi pribadi dan jadwal event mereka
- ```bash
-flutter run
-```
