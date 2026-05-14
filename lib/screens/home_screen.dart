@@ -60,7 +60,7 @@ class HomeScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _chip("Wedding"),
+                _chip("nikah"),
                 _chip("Birthday"),
                 _chip("Gathering"),
               ],
