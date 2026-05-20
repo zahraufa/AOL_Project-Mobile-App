@@ -1,3 +1,4 @@
+import 'package:eo_app/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 
 import 'screens/home_screen.dart';
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SearchPage(),
+      home: CustomTextField(),
     );
   }
 }
