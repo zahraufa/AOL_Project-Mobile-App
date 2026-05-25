@@ -1,26 +1,5 @@
 import 'package:flutter/material.dart';
-
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Event Organizer App',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF1A3A6B)),
-        useMaterial3: true,
-        fontFamily: 'Roboto',
-      ),
-      home: const SearchPage(),
-    );
-  }
-}
+import 'package_page.dart';
 
 // ─── Data Model ───────────────────────────────────────────────────────────────
 
@@ -94,8 +73,8 @@ class _SearchPageState extends State<SearchPage> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
 
-  static const Color _navyBlue = Color(0xFF102B53);
-  static const Color _bgColor  = Color(0xFFE6EAF3);
+  static const Color _navyBlue      = Color(0xFF102B53);
+  static const Color _bgColor       = Color(0xFFE6EAF3);
   static const Color _gradientAccent = Color(0xFFA3A1C8);
 
   final List<String> _locations = [
@@ -124,7 +103,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFE6EAF3),
+      backgroundColor: _bgColor,
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 420),
@@ -144,10 +123,7 @@ class _SearchPageState extends State<SearchPage> {
             child: SafeArea(
               child: Column(
                 children: [
-                  // ── Top Bar ──
                   _buildTopBar(),
-
-                  // ── Grid ──
                   Expanded(
                     child: _filteredEOs.isEmpty
                         ? const Center(
@@ -172,8 +148,6 @@ class _SearchPageState extends State<SearchPage> {
                             },
                           ),
                   ),
-
-                  // ── Bottom Nav (di dalam Column, ikut ConstrainedBox) ──
                   _buildBottomNav(),
                 ],
               ),
@@ -191,7 +165,7 @@ class _SearchPageState extends State<SearchPage> {
       padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFF102B53), Color(0xFF1E4A8A)],
+          colors: [_navyBlue, Color(0xFF1E4A8A)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -209,6 +183,7 @@ class _SearchPageState extends State<SearchPage> {
       ),
       child: Row(
         children: [
+          // Search Field
           Expanded(
             flex: 3,
             child: Container(
@@ -233,6 +208,7 @@ class _SearchPageState extends State<SearchPage> {
             ),
           ),
           const SizedBox(width: 8),
+          // Sort by Location Dropdown
           Expanded(
             flex: 2,
             child: Container(
@@ -288,7 +264,7 @@ class _SearchPageState extends State<SearchPage> {
     return Container(
       height: 70,
       decoration: BoxDecoration(
-        color: const Color(0xFF102B53),
+        color: _navyBlue,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),
@@ -353,12 +329,15 @@ class _EOCard extends StatelessWidget {
 
   const _EOCard({required this.eo});
 
-  static const Color _cardBlue = Color(0xFF1E4080);
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const PackagePage()),
+        );
+      },
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
@@ -382,6 +361,7 @@ class _EOCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // Image
             Expanded(
               child: Stack(
                 fit: StackFit.expand,
@@ -395,7 +375,7 @@ class _EOCard extends StatelessWidget {
                         color: const Color(0xFFD6E4F7),
                         child: const Center(
                           child: CircularProgressIndicator(
-                            color: Color(0xFF1A3A6B),
+                            color: Color(0xFF102B53),
                             strokeWidth: 2,
                           ),
                         ),
@@ -429,6 +409,7 @@ class _EOCard extends StatelessWidget {
                 ],
               ),
             ),
+            // Name Label
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
               decoration: const BoxDecoration(
