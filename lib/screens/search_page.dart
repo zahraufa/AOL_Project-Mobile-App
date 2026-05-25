@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package_page.dart';
-
+import 'profile_page.dart';
+ 
 // ─── Data Model ───────────────────────────────────────────────────────────────
-
+ 
 class EventOrganizer {
   final String name;
   final String imageUrl;
   final String location;
-
+ 
   const EventOrganizer({
     required this.name,
     required this.imageUrl,
     required this.location,
   });
 }
-
+ 
 final List<EventOrganizer> dummyEOs = [
   EventOrganizer(
     name: "Grand Ballroom EO",
@@ -57,26 +57,26 @@ final List<EventOrganizer> dummyEOs = [
     location: "Bogor",
   ),
 ];
-
+ 
 // ─── Search Page ──────────────────────────────────────────────────────────────
-
+ 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
-
+ 
   @override
   State<SearchPage> createState() => _SearchPageState();
 }
-
+ 
 class _SearchPageState extends State<SearchPage> {
   int _selectedIndex = 0;
   String _selectedLocation = 'All Locations';
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
-
+ 
   static const Color _navyBlue      = Color(0xFF102B53);
   static const Color _bgColor       = Color(0xFFE6EAF3);
   static const Color _gradientAccent = Color(0xFFA3A1C8);
-
+ 
   final List<String> _locations = [
     'All Locations',
     'Jakarta Selatan',
@@ -88,7 +88,7 @@ class _SearchPageState extends State<SearchPage> {
     'Depok',
     'Bogor',
   ];
-
+ 
   List<EventOrganizer> get _filteredEOs {
     return dummyEOs.where((eo) {
       final matchSearch =
@@ -99,7 +99,7 @@ class _SearchPageState extends State<SearchPage> {
       return matchSearch && matchLocation;
     }).toList();
   }
-
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -157,9 +157,9 @@ class _SearchPageState extends State<SearchPage> {
       ),
     );
   }
-
+ 
   // ── Top Search + Sort Bar ─────────────────────────────────────────────────
-
+ 
   Widget _buildTopBar() {
     return Container(
       padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
@@ -249,9 +249,9 @@ class _SearchPageState extends State<SearchPage> {
       ),
     );
   }
-
+ 
   // ── Bottom Navigation Bar ─────────────────────────────────────────────────
-
+ 
   Widget _buildBottomNav() {
     final items = [
       _NavItem(icon: Icons.home_rounded,          label: 'Home'),
@@ -260,7 +260,7 @@ class _SearchPageState extends State<SearchPage> {
       _NavItem(icon: Icons.chat_bubble_rounded,    label: 'Chat'),
       _NavItem(icon: Icons.person_rounded,         label: 'Profile'),
     ];
-
+ 
     return Container(
       height: 70,
       decoration: BoxDecoration(
@@ -321,21 +321,26 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 }
-
+ 
 // ─── EO Card Widget ───────────────────────────────────────────────────────────
-
+ 
 class _EOCard extends StatelessWidget {
   final EventOrganizer eo;
-
+ 
   const _EOCard({required this.eo});
-
+ 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => const PackagePage()),
+          MaterialPageRoute(
+            builder: (_) => ProfilePage(
+              eoName: eo.name,
+              eoImageUrl: eo.imageUrl,
+            ),
+          ),
         );
       },
       child: Container(
@@ -443,9 +448,9 @@ class _EOCard extends StatelessWidget {
     );
   }
 }
-
+ 
 // ─── Helper Classes ───────────────────────────────────────────────────────────
-
+ 
 class _NavItem {
   final IconData icon;
   final String label;
