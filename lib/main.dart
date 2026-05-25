@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'pages/search_page.dart';
+
+import 'screens/search_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +15,9 @@ class MyApp extends StatelessWidget {
       title: 'Event Organizer App',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF102B53)),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF102B53),
+        ),
         useMaterial3: true,
         fontFamily: 'Roboto',
       ),
