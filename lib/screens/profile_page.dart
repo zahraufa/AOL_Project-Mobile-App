@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package_page.dart';
+import 'package_screen.dart';
  
 // ─── Profile Page ─────────────────────────────────────────────────────────────
  
