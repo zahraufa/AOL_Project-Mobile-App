@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:eo_app/models/event_organizer.dart';
-import 'package:eo_app/screens/package_page.dart';
+import 'package:eo_app/screens/package_screen.dart';      
 import 'package:eo_app/widgets/bottom_nav_bar.dart';
 import 'package:eo_app/widgets/package_preview_card.dart';
 
@@ -249,7 +249,7 @@ class _ProfilePageState extends State<ProfilePage> {
             child: GestureDetector(
               onTap: () => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => const PackagePage()),
+                MaterialPageRoute(builder: (_) => PackagePage()),
               ),
               child: const Row(
                 mainAxisSize: MainAxisSize.min,
