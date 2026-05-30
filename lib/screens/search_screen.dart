@@ -4,6 +4,7 @@ import 'package:eo_app/services/eo_service.dart';
 import 'package:eo_app/widgets/eo_card.dart';
 import 'package:eo_app/widgets/bottom_nav_bar.dart';
 
+
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
 
