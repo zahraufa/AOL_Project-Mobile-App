@@ -8,7 +8,7 @@ datasource db {
 }
 
 model event_organizer {
-  EO_ID                    Int                        @id
+  EO_ID                    Int                        @id @default(autoincrement())
   EO_name                  String                     @db.VarChar(100)
   EO_Description           String                     @db.Text
   EO_Address               String                     @db.VarChar(255)
@@ -22,7 +22,7 @@ model event_organizer {
 }
 
 model event_organizer_services {
-  EO_services_ID     Int              @id
+  EO_services_ID     Int              @id @default(autoincrement())
   Event_Organizer_ID Int?
   Main_Services_ID   Int?
   event_organizer    event_organizer? @relation(fields: [Event_Organizer_ID], references: [EO_ID], onDelete: Restrict, onUpdate: Restrict, map: "fk_eo_id")
@@ -45,7 +45,7 @@ model payments {
 }
 
 model rating {
-  Rating_ID          Int              @id
+  Rating_ID          Int              @id @default(autoincrement())
   User_ID            Int?
   Event_Organizer_ID Int?
   Rating             Int?
@@ -59,13 +59,13 @@ model rating {
 }
 
 model services {
-  Service_ID               Int                        @id
+  Service_ID               Int                        @id @default(autoincrement())
   Service_name             String                     @unique(map: "Service_name") @db.VarChar(100)
   event_organizer_services event_organizer_services[]
 }
 
 model transaction {
-  Transaction_ID     Int                             @id
+  Transaction_ID     Int                             @id @default(autoincrement())
   Event_Date         DateTime                        @db.Date
   Event_Location     String                          @db.Text
   Total_price        Decimal?                        @db.Decimal(12, 2)
@@ -82,7 +82,7 @@ model transaction {
 }
 
 model users {
-  User_ID          Int           @id
+  User_ID          Int           @id @default(autoincrement())
   Username         String        @db.VarChar(100)
   User_email       String        @unique(map: "User_email") @db.VarChar(100)
   User_password    String        @db.VarChar(255)
