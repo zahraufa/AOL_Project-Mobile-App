@@ -1,3 +1,4 @@
+import 'package:eo_app/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 
 import 'screens/search_page.dart';
@@ -14,6 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Event Organizer App',
       debugShowCheckedModeBanner: false,
+
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF102B53),
@@ -22,6 +24,8 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Roboto',
       ),
       home: const SearchPage(),
+
+      home:
     );
   }
 }
