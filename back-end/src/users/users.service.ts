@@ -7,6 +7,9 @@ import { UserCreateDto } from './dto/UserCreateDto';
 
 @Injectable()
 export class UsersService {
+    find(arg0: (user: any) => boolean) {
+        throw new Error('Method not implemented.');
+    }
     private _prismaService: PrismaService;
     constructor(prismaService: PrismaService) {
         this._prismaService = prismaService;    

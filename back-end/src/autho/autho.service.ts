@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { AuthoLoginDto } from './dto/login.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthoService {
@@ -13,7 +14,7 @@ export class AuthoService {
     }
 
     login(data: AuthoLoginDto){
-        const user = this._userService.find((user)=>user.Username === data.Username && user.User_password === data.User_password);
+        const user = this._userService.find((user) => user.Username === data.Username && user.User_password === data.User_password);
         if(!user) {
             throw new BadRequestException("Invalid username or password");
         } 

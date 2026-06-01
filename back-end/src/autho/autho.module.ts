@@ -4,6 +4,7 @@ import { AuthoController } from './autho.controller';
 
 @Module({
   providers: [AuthoService],
-  controllers: [AuthoController]
+  controllers: [AuthoController],
+  exports: [AuthoService]
 })
 export class AuthoModule {}
