@@ -88,7 +88,7 @@ model users {
   User_password    String        @db.VarChar(255)
   User_PhoneNumber String        @db.VarChar(20)
   Created_at       DateTime      @default(now()) @db.Timestamp(0)
-  Update_at        DateTime      @default(now()) @db.Timestamp(0)
+  Update_at        DateTime      @default(now()) @updatedAt @db.Timestamp(0)
   rating           rating[]
   transaction      transaction[]
 }

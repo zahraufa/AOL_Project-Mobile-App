@@ -17,12 +17,6 @@ export class UsersController {
         return data
     }
 
-    @Get(':id')
-    async findOne(@Param('id') User_ID: string){
-        const data = await this._usersService.findOne(Number(User_ID));
-        return data
-    }
-
     @Post()
     @ApiBody({
         description: "Butuh body dengan format sini",
