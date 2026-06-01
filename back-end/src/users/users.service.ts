@@ -2,7 +2,8 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, users } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { usercreateDTO } from './dto/usercreateDTO';
+import { UserCreateDto } from './dto/UserCreateDto';
+
 
 @Injectable()
 export class UsersService {
@@ -23,13 +24,13 @@ export class UsersService {
         })
     }
 
-    create(body: usercreateDTO){
+    create(body: UserCreateDto){
         return this._prismaService.users.create({
             data: body as Prisma.usersCreateInput
         })
     }
 
-    update(User_ID: number, body: usercreateDTO){
+    update(User_ID: number, body: UserCreateDto){
         return this._prismaService.users.update({
             where: {
                 User_ID: User_ID
