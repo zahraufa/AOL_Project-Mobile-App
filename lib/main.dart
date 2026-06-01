@@ -1,20 +1,26 @@
-import 'package:eo_app/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
-
-import 'screens/home_screen.dart';
-import 'screens/search_page.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:eo_app/screens/signup_screen.dart';
 
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'App Auth',
       debugShowCheckedModeBanner: false,
-      home:
+      theme: ThemeData(
+        scaffoldBackgroundColor: const Color(0xFF1B2A47), 
+        primaryColor: const Color(0xFF1B2A47),
+        fontFamily: GoogleFonts.tinos().fontFamily,
+      ),
+      home: const SignupScreen(), 
     );
   }
 }
