@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:eo_app/screens/signup_screen.dart';
 
 void main() {
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
           seedColor: const Color(0xFF102B53),
         ),
         useMaterial3: true,
-        fontFamily: 'Roboto',
+        fontFamily: GoogleFonts.tinos().fontFamily, 
       ),
       home: const SignupScreen(),
     );

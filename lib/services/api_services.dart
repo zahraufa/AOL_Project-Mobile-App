@@ -7,6 +7,7 @@ class ApiServices {
 
   Future<bool> registerUser(SignupModel user) async {
     try {
+      /*
       final response = await http.post(
         Uri.parse('$baseUrl/auth/register'),
         headers: {'Content-Type': 'application/json'},
@@ -20,6 +21,19 @@ class ApiServices {
         return false;
       }
     } catch (e){
+      print('Exception: $e');
+      return false;
+    }
+    */
+
+    await Future.delayed(const Duration(seconds: 2));
+      
+      // Print data ke console untuk memastikan data dari TextField masuk ke model
+      print('Data siap dikirim: ${user.toJson()}');
+      
+      return true; // Pura-pura return sukses (true)
+      
+    } catch (e) {
       print('Exception: $e');
       return false;
     }
