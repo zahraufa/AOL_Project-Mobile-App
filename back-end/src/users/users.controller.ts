@@ -1,7 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Req, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UserCreateDto } from './dto/UserCreateDto';
 import { ApiBody } from '@nestjs/swagger';
+import { jwtGuards } from 'src/autho/guards/jwt.guards';
+import { userUpdateDto } from './dto/UserUpdateDto';
 
 @Controller('users')
 export class UsersController {
@@ -11,50 +13,25 @@ export class UsersController {
         this._usersService = usersService;
     }
 
-    @Get()
-    async findAll(){
-        const data = await this._usersService.findAll();
-        return data
+    @UseGuards(jwtGuards)
+    @Get('profile')
+    getProfile(@Req() req){
+        return this._usersService.getProfile(req.user['sub']);
     }
 
-    @Post()
-    @ApiBody({
-        description: "Butuh body dengan format sini",
-        type: UserCreateDto
-    })
-
-    async create(@Body() body:UserCreateDto){
-          try {
-    console.log(body);
-
-    const data =
-      await this._usersService.create(body);
-
-    return data;
-  } catch (error) {
-    console.log(error);
-
-    return error;
-  }
+    @UseGuards(jwtGuards)
+    @Get('current')
+    getCurrent(@Req() req){
+        return req.user;
     }
-    // async create(@Body() body:UserCreateDto){
-    //     const data = await this._usersService.create(body)
-    //     return data
-    // }
+
+    @UseGuards(jwtGuards)
+    @Patch('update-profile')
+    updateProfile(@Req() req, @Body() body: userUpdateDto){
+        return this._usersService.updateProfile(Number(req.user['sub']), body);
+    }
+
     
-    @Put(':id')
-    @ApiBody({
-        description: "Need body",
-        type: UserCreateDto
-    })
-    async update(@Param('id') User_ID: string, @Body() body: UserCreateDto){
-        const data = await this._usersService.update(Number(User_ID), body)
-        return data
-    }
-
-    @Delete(':id')
-    async delete (@Param('id') User_Id: string){
-        const data = await this._usersService.delete(Number(User_Id))
-        return data
-    }
 }
+
+
