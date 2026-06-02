@@ -1,6 +1,7 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Get, Req } from '@nestjs/common';
 import { AuthoService } from './autho.service';
-import { AuthoSignupDto } from './dto/auth.dto';
+import { AuthoSignupDto, AuthoLoginDto } from './dto/auth.dto';
+import { jwtGuards } from './guards/jwt.guards';
 
 @Controller('autho')
 export class AuthoController {
@@ -14,4 +15,16 @@ export class AuthoController {
     async signUp(@Body() body: AuthoSignupDto) {
         return this._authoService.signUp(body);
     }
+
+    @Post('login')
+    async login(@Body() body: AuthoLoginDto) {
+        return this._authoService.login(body);
+    }
+
+    @UseGuards(jwtGuards)
+    @Get('profile')
+    async getProfile(@Req() req){
+        return req.user;
+    }
 }
+

@@ -50,7 +50,7 @@ export class AuthoService {
     async login(body: AuthoLoginDto) {
         const user = await this._prismaService.users.findUnique({
             where: {
-                User_email: body.User_Email,
+                User_email: body.User_email,
             }
         })
 
