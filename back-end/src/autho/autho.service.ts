@@ -1,33 +1,47 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
-import { AuthoLoginDto } from './dto/auth.dto';
-import { JwtService } from '@nestjs/jwt';
+import { AuthoSignupDto, AuthoLoginDto } from './dto/auth.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthoService {
-    // private _userService: UsersService;
-    // private _jwtService: JwtService;
+    private _prismaService: PrismaService;
 
-    // constructor(userService: UsersService, jwtService: JwtService){
-    //     this._userService = userService;
-    //     this._jwtService = jwtService;
-    // }
+    constructor(prismaService: PrismaService) {
+        this._prismaService = prismaService;
+    }
 
-    // login(data: AuthoLoginDto){
-    //     const user = this._userService.find((user) => user.Username === data.Username && user.User_password === data.User_password);
-    //     if(!user) {
-    //         throw new BadRequestException("Invalid username or password");
-    //     } 
-        
-    //     const payload = {
-    //         id: user.User_ID,
-    //         username: user.Username,
-    //     };
-    //     const token = this._jwtService.sign(payload);
+    async signUp(body: AuthoSignupDto) {
+        const UserisExist = await this._prismaService.users.findUnique({
+            where: {
+                User_email: body.User_email,
+            }
+        })
 
-    //     return({
-    //         message: "Login successful",
-    //         user, token
-    //     })
-    // }
+        if(UserisExist) {
+            throw new ConflictException('Email already exists');
+        }
+
+        const newUser = await this._prismaService.users.create({
+            data: {
+                Username: body.Username,
+                User_email: body.User_email,
+                User_password: await bcrypt.hash(body.User_password, 10),
+                User_PhoneNumber: body.User_PhoneNumber,
+            }
+        })
+
+        return {
+            message: 'Sign up successful',
+            user: {
+                User_ID: newUser.User_ID,
+                Username: newUser.Username,
+                User_email: newUser.User_email,
+                User_PhoneNumber: newUser.User_PhoneNumber,
+            }
+        }
+    }
 }
+
+
