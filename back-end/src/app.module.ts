@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -8,10 +9,17 @@ import { CompareFeaturesModule } from './compare_features/compare_features.modul
 import { TransactionModule } from './transaction/transaction.module';
 import { AuthoModule } from './autho/autho.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [UsersModule, EventOrganizerModule, CompareFeaturesModule, TransactionModule, AuthoModule, PrismaModule],
-  controllers: [AppController],
-  providers: [AppService, CompareFeaturesService],
+  // imports: [UsersModule, EventOrganizerModule, CompareFeaturesModule, TransactionModule, AuthoModule, PrismaModule],
+  // controllers: [AppController],
+  // providers: [AppService, CompareFeaturesService],
+  imports: [ 
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    PrismaModule, UsersModule, AuthoModule
+  ],
 })
 export class AppModule {}
