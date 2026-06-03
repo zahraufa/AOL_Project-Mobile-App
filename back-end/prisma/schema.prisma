@@ -30,7 +30,7 @@ model eo_package {
   Package_Price        Decimal         @db.Decimal(12, 2)
   Package_Description String          @db.Text
   Package_Image       String?         @db.VarChar(255)
-  event_organizer     event_organizer @relation(fields: [EO_ID], references: [EO_ID], onUpdate: Restrict, map: "fk_package_eo__id")
+  event_organizer     event_organizer @relation(fields: [EO_ID], references: [EO_ID], onUpdate: Restrict, map: "fk_package_eo_id")
 
   @@index([EO_ID], map: "fk_package_eo_id")
 }
@@ -59,6 +59,7 @@ model event_organizer_services {
   Service_Price       Decimal?        @db.Decimal(12, 2)
   Service_Description String?         @db.Text
   Additional_Feature  String?         @db.VarChar(255)
+  Is_Required         Boolean         @default(false)
   event_organizer     event_organizer @relation(fields: [Event_Organizer_ID], references: [EO_ID], onUpdate: Restrict, map: "fk_pivot_eo_id")
   services            services        @relation(fields: [Main_Services_ID], references: [Service_ID], onUpdate: Restrict, map: "fk_pivot_service_id")
 
