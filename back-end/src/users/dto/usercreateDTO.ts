@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { ApiProperty } from "@nestjs/swagger";
 
-export class usercreateDTO {
+export class UserCreateDto {
     @ApiProperty()
     Username: string;
     @ApiProperty()

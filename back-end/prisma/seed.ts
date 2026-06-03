@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 
 async function data() {
     try {
-        await seedEo();
+        await seedEo(prisma);
 
         console.log("All seed data inserted");
     } catch (error) {

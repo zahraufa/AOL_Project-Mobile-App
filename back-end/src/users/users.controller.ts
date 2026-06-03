@@ -1,7 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Req, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { usercreateDTO } from './dto/usercreateDTO';
+import { UserCreateDto } from './dto/UserCreateDto';
 import { ApiBody } from '@nestjs/swagger';
+import { jwtGuards } from 'src/autho/guards/jwt.guards';
+import { userUpdateDto } from './dto/UserUpdateDto';
 
 @Controller('users')
 export class UsersController {
@@ -11,55 +13,25 @@ export class UsersController {
         this._usersService = usersService;
     }
 
-    @Get()
-    async findAll(){
-        const data = await this._usersService.findAll();
-        return {
-            status: 6767,
-            data: data
-        }
+    @UseGuards(jwtGuards)
+    @Get('profile')
+    getProfile(@Req() req){
+        return this._usersService.getProfile(req.user['sub']);
     }
 
-    @Get(':id')
-    async findOne(@Param('id') User_ID: string){
-        const data = await this._usersService.findOne(Number(User_ID));
-        return {
-            status: 6767,
-            data: data
-        }
+    @UseGuards(jwtGuards)
+    @Get('current')
+    getCurrent(@Req() req){
+        return req.user;
     }
 
-    @Post()
-    @ApiBody({
-        description: "Butuh body dengan format sini",
-        type: usercreateDTO
-    })
-    async create(@Body() body:usercreateDTO){
-        const data = await this._usersService.create(body)
-        return {
-            status: 6767,
-            data: data
-        }
-    }
-    @Put(':id')
-    @ApiBody({
-        description: "Need body",
-        type: usercreateDTO
-    })
-    async update(@Param('id') User_ID: string, @Body() body: usercreateDTO){
-        const data = await this._usersService.update(Number(User_ID), body)
-        return {
-            status: 6767,
-            data: data
-        }
+    @UseGuards(jwtGuards)
+    @Patch('update-profile')
+    updateProfile(@Req() req, @Body() body: userUpdateDto){
+        return this._usersService.updateProfile(Number(req.user['sub']), body);
     }
 
-    @Delete('id')
-    async delete (@Param('id') User_Id: string){
-        const data = await this._usersService.delete(Number(User_Id))
-        return {
-            status: 6767,
-            data: data
-        }
-    }
+    
 }
+
+
