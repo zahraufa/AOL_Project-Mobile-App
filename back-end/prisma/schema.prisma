@@ -115,7 +115,7 @@ model transaction {
   selected_services transaction_services[]
   event_organizer    event_organizer               @relation(fields: [Event_Organizer_ID], references: [EO_ID], onDelete: Restrict, onUpdate: Restrict, map: "fk_eo_transaction")
   users              users                         @relation(fields: [User_ID], references: [User_ID], onDelete: Restrict, onUpdate: Restrict, map: "fk_user_transaction")
-  eo_package         eo_package                    @relation(fields: [Package_ID], references: [Package_ID], onDelete: Restrict, onUpdate: Restrict, map: "fk_package_transaction")
+  eo_package         eo_package?                   @relation(fields: [Package_ID], references: [Package_ID], onDelete: Restrict, onUpdate: Restrict, map: "fk_package_transaction")
 
 
 }
