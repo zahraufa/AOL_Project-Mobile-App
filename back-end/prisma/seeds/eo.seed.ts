@@ -73,6 +73,7 @@ export async function seedEo(prisma: PrismaClient) {
             ],
             
             services: [
+                //ini tetap
                 { name: 'Rundown and Scriptwriting', price: 0, required: true, desc: 'Sudah include manajemen rundown artis dan pengisi acara.' },
                 { name: 'Master of Ceremony (MC)', price: 0, required: true, desc: 'Sudah include sepasang MC (Dual MC) untuk memandu acara besar.' },
                 { name: 'Tim Dokumentasi dan Fotografi', price: 0, required: true, desc: 'Sudah include komando penuh pertunjukan lampu (lighting) dan multimedia.' },
@@ -102,18 +103,46 @@ export async function seedEo(prisma: PrismaClient) {
             ],
             
             services: [
-                // --- KELOMPOK LAYANAN TETAP (Sudah Include) ---
+                
                 { name: 'Rundown and Scriptwriting', price: 0, required: true, desc: 'Sudah include manajemen rundown artis dan pengisi acara.' },
                 { name: 'Master of Ceremony (MC)', price: 0, required: true, desc: 'Sudah include sepasang MC (Dual MC) untuk memandu acara besar.' },
                 { name: 'Tim Dokumentasi dan Fotografi', price: 0, required: true, desc: 'Sudah include komando penuh pertunjukan lampu (lighting) dan multimedia.' },
                 { name: 'Guest Management', price: 0, required: true, desc: 'Sudah include tim ticketing, registrasi QR Code, dan penerima tamu.' },
                 { name: 'Show Controlling', price: 0, required: true, desc: 'Sudah include komando penuh pertunjukan lampu (lighting) dan multimedia.' },
 
-                // --- KELOMPOK LAYANAN TAMBAHAN (Add-ons) ---
+      
                 { name: 'Performer', price: 15000000, required: false, desc: 'Penyediaan talent band atau pengisi acara hiburan lokal.' },
                 { name: 'Live Painting', price: 5000000, required: false, desc: 'Dokumentasi artistik berupa lukisan langsung selama acara festival.' }
       ]
     }
+    // {
+    //         EO_Name: "Groovy", 
+    //         EO_Description: "Groovy Event Organizer (EO) terbaik di Jakarta, Indonesia, memberikan layanan one stop solution untuk berbagai jenis acara indoor dan outdoor. Dengan pengalaman sejak 2007, Groovy EO menyediakan layanan profesional untuk launching, gathering, conference, seminar, townhall, exhibition, dan roadshow yang dirancang khusus dan menarik sesuai kebutuhan klien.",
+    //         EO_Address: "Jl. Batu Ceper IV",
+    //         EO_Number: " 081284858608",
+    //         EO_Rating: 5.0,
+
+    //         // Menggunakan master data kategorimu agar tidak undefined saat di-seed
+    //         categories: ['Wedding Event', 'Seminar'],
+            
+    //         packages: [
+    //             { Name: "Silver Corporate Package", Price: 40000000, Desc: "Paket standard untuk gathering perusahaan internal." },
+    //             { Name: "Gold Festival Package", Price: 95000000, Desc: "Paket skala besar untuk panggung konser outdoor luar ruangan." }
+    //         ],
+            
+    //         services: [
+                
+    //             { name: 'Rundown and Scriptwriting', price: 0, required: true, desc: 'Sudah include manajemen rundown artis dan pengisi acara.' },
+    //             { name: 'Master of Ceremony (MC)', price: 0, required: true, desc: 'Sudah include sepasang MC (Dual MC) untuk memandu acara besar.' },
+    //             { name: 'Tim Dokumentasi dan Fotografi', price: 0, required: true, desc: 'Sudah include komando penuh pertunjukan lampu (lighting) dan multimedia.' },
+    //             { name: 'Guest Management', price: 0, required: true, desc: 'Sudah include tim ticketing, registrasi QR Code, dan penerima tamu.' },
+    //             { name: 'Show Controlling', price: 0, required: true, desc: 'Sudah include komando penuh pertunjukan lampu (lighting) dan multimedia.' },
+
+      
+    //             { name: 'Performer', price: 15000000, required: false, desc: 'Penyediaan talent band atau pengisi acara hiburan lokal.' },
+    //             { name: 'Live Painting', price: 5000000, required: false, desc: 'Dokumentasi artistik berupa lukisan langsung selama acara festival.' }
+    //   ]
+        
     ];
 
     for(const eoData of dataSemuaEO) {
