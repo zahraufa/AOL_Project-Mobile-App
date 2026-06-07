@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { FindForEODto } from './dto/eo.dto';
 
 @Injectable()
 export class EventOrganizerService {
@@ -10,27 +11,44 @@ export class EventOrganizerService {
         this._prismaservice = prismaservice;
     }   
 
-    async getAllEO(){
+    async getAllEO(query: FindForEODto){
+        const searchingEOCat  = query.category? {
+            event_organizer_categories: {
+                some: {
+                    eo_category: {
+                        Category_Name: query.category
+                    }
+                }
+             }
+        } : {}
+        
         const allEO = await this._prismaservice.event_organizer.findMany({
+            where: searchingEOCat,
+
             include: {
                 eo_package: true,
                 event_organizer_categories:{
                     include: {
                         eo_category: true
                     }
-                }
+                },
             }
         })
-        return allEO.map((eo) => ({
+        const eventOrganizers = allEO.map((eo) => ({
             EO_ID: eo.EO_ID,
             EO_name: eo.EO_name,
             EO_Rating: eo.EO_Rating,
             EO_Image: eo.EO_Image,
 
-            lowet_price: eo.eo_package.length > 0 ? Math.min(...eo.eo_package.map((pkg) => Number(pkg.Package_Price))) : null,
+            lowest_price: eo.eo_package.length > 0 ? Math.min(...eo.eo_package.map((pkg) => Number(pkg.Package_Price))) : null,
 
             categories: eo.event_organizer_categories.map((categ)=> categ.eo_category.Category_Name),
     }))
+
+    return {
+        message: 'Success get the Event Organizer',
+        data: eventOrganizers
+    }
     }
 
     async getEOByID(EO_ID: number){
@@ -104,8 +122,8 @@ export class EventOrganizerService {
 
         included_services:
           eventOrganizer.event_organizer_services.filter((service) => service.Is_Required === true).map((service) => ({
-              EO_services_ID:
-                service.EO_services_ID,
+              Service_ID:
+                service.services.Service_ID,
 
               Service_Name:
                 service.services
@@ -117,8 +135,8 @@ export class EventOrganizerService {
 
         add_ons:
           eventOrganizer.event_organizer_services.filter((service) => service.Is_Required === false).map((service) => ({
-              EO_services_ID:
-                service.EO_services_ID,
+              Service_ID:
+                service.services.Service_ID,
 
               Service_Name:
                 service.services
@@ -187,13 +205,13 @@ export class EventOrganizerService {
             })),
 
                 included_services: eo.event_organizer_services.filter((service) => service.Is_Required === true).map((service) => ({
-                    EO_services_ID: service.EO_services_ID,
+                    Service_ID: service.services.Service_ID,
                     Service_Name: service.services.Service_name,
                     Description: service.Service_Description
                 })),
 
                 add_ons: eo.event_organizer_services.filter((service) => service.Is_Required === false).map((service) => ({
-                    EO_services_ID: service.EO_services_ID,
+                    Service_ID: service.services.Service_ID,
                     Service_Name: service.services.Service_name,
                     Price: service.Service_Price,
                     Description: service.Service_Description
