@@ -7,6 +7,8 @@ import { EventOrganizerModule } from './event_organizer/event_organizer.module';
 import { AuthoModule } from './autho/autho.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
+import { TransactionModule } from './transaction/transaction.module';
+import { PaymentsModule } from './payments/payments.module';
 
 @Module({
   // imports: [UsersModule, EventOrganizerModule, CompareFeaturesModule, TransactionModule, AuthoModule, PrismaModule],
@@ -16,7 +18,7 @@ import { ConfigModule } from '@nestjs/config';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    PrismaModule, UsersModule, AuthoModule, EventOrganizerModule
+    PrismaModule, UsersModule, AuthoModule, EventOrganizerModule, TransactionModule, PaymentsModule
   ],
 })
 export class AppModule {}
