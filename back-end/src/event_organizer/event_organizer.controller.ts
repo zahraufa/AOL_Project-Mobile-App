@@ -1,5 +1,6 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { EventOrganizerService } from './event_organizer.service';
+import { FindForEODto } from './dto/eo.dto';
 
 @Controller('event-organizer')
 export class EventOrganizerController {
@@ -10,8 +11,8 @@ export class EventOrganizerController {
     }
 
     @Get()
-    getALLEO(){
-        return this._eventOrganizerService.getAllEO();
+    getALLEO(@Query() query: FindForEODto){
+        return this._eventOrganizerService.getAllEO(query);
     }
 
     @Get('comparing')

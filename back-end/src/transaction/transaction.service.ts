@@ -13,9 +13,10 @@ export class TransactionService {
     }
 
     async buildTransaction(dto: transactionDto, user_id: number) {
-        const selected_pack = await this._PrismaService.eo_package.findUnique({
+        const selected_pack = await this._PrismaService.eo_package.findFirst({
             where: {
-                Package_ID: dto.package_id
+                Package_ID: dto.package_id,
+                EO_ID: dto.eo_id,
             }
         })
 
@@ -27,7 +28,7 @@ export class TransactionService {
             where: {
 
                 Event_Organizer_ID: dto.eo_id,
-                EO_services_ID: {
+                Main_Services_ID: {
                     in: dto.selected_services || []
                 },
                 Is_Required: false
