@@ -71,7 +71,7 @@ model event_organizer_services {
 
 model payments {
   Payments_ID    Int                     @id @default(autoincrement())
-  Transaction_ID Int
+  Transaction_ID Int                     @unique(map: "Transaction_ID")
   Payment_Method payments_Payment_Method @default(bank_transfer)
   Payment_Status payments_Payment_Status @default(Pending)
   Amount         Decimal                @db.Decimal(12, 2)
@@ -111,7 +111,7 @@ model transaction {
   User_ID            Int
   Event_Organizer_ID Int
   Package_ID         Int
-  payments           payments[]
+  payments           payments?
   selected_services transaction_services[]
   event_organizer    event_organizer               @relation(fields: [Event_Organizer_ID], references: [EO_ID], onDelete: Restrict, onUpdate: Restrict, map: "fk_eo_transaction")
   users              users                         @relation(fields: [User_ID], references: [User_ID], onDelete: Restrict, onUpdate: Restrict, map: "fk_user_transaction")
