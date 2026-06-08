@@ -53,18 +53,30 @@ class ApiServices {
   }
 
   // GET eo
-  Future<List<EventOrganizerModel>> getEventOrganizers() async {
+  Future<List<EventOrganizerModel>> getEventOrganizers({String? category}) async {
     try {
-      final response = await http.get(Uri.parse('$baseUrl/event-organizer'));
+      String url = '$baseUrl/event-organizer'; 
+
+      if (category != null && category != 'all category') {
+        final encodedCategory = Uri.encodeComponent(category);
+        url = '$url?category=$encodedCategory';
+      }
+
+      print('Menembak API ke: $url');
+
+      final response = await http.get(Uri.parse(url));
 
       if (response.statusCode == 200) {
-        List<dynamic> body = jsonDecode(response.body);
-        List<EventOrganizerModel> eos = body
+        final Map<String, dynamic> responseBody = jsonDecode(response.body);
+        final List<dynamic> dataList = responseBody['data'] ?? responseBody;
+
+        if (dataList is! List) return [];
+
+        return dataList
             .map((dynamic item) => EventOrganizerModel.fromJson(item))
             .toList();
-        return eos;
       } else {
-        print('Failed to get eo: ${response.body}');
+        print('failed: ${response.body}');
         return [];
       }
     } catch (e) {
