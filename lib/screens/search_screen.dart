@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/event_organizer.dart';
 import '../services/api_services.dart';
 import '../widgets/eo_card.dart';
-//import 'eo_profile_screen.dart';
+import 'EOProfile_screen.dart';
 
 class SearchScreen extends StatefulWidget {
   final bool isSelectionMode;
@@ -182,10 +182,10 @@ class _SearchScreenState extends State<SearchScreen> {
                               if (widget.isSelectionMode) {
                                 Navigator.pop(context, eo);
                               } else {
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(builder: (context) => EoProfileScreen(eo: eo)),
-                                // );
+                                Navigator.push(
+                                   context,
+                                   MaterialPageRoute(builder: (context) => EoProfileScreen(eo: eo)),
+                                 );
                               }
                             },
                           );

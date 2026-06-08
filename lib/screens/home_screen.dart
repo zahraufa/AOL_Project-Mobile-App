@@ -4,7 +4,7 @@ import '../models/event_organizer.dart';
 import '../models/package_model.dart';
 import '../services/api_services.dart';
 import 'search_screen.dart';
-//import 'eo_profile_screen.dart';
+import 'EOProfile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -190,7 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             final eo = _recommendedEos[index];
                             return GestureDetector(
                               onTap: () {
-                                //Navigator.push(context, MaterialPageRoute(builder: (_) => EoProfileScreen(eo: eo)));
+                                Navigator.push(context, MaterialPageRoute(builder: (_) => EoProfileScreen(eo: eo)));
                               },
                               child: Container(
                                 width: 110,
