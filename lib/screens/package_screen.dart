@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../models/event_organizer.dart';
 import '../models/package_model.dart';
-// import 'package_detail_screen.dart'; // Buka komen ini jika halaman detail sudah dibuat
-// import 'payment_screen.dart'; // Buka komen ini jika halaman payment sudah dibuat
+// import 'package_detail_screen.dart';
+// import 'payment_screen.dart';
 
 class EoPackagesScreen extends StatefulWidget {
   final EventOrganizerModel eo;
