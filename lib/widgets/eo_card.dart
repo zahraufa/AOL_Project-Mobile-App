@@ -1,251 +1,80 @@
 import 'package:flutter/material.dart';
-import 'package:eo_app/models/event_organizer.dart';
-import 'package:eo_app/screens/EOProfile_screen.dart';
+import '../models/event_organizer.dart';
 
-class EOCard extends StatelessWidget {
-  final EventOrganizer eo;
+class EoCard extends StatelessWidget {
+  final EventOrganizerModel eo;
+  final VoidCallback onTap;
 
-  const EOCard({super.key, required this.eo});
+  const EoCard({Key? key, required this.eo, required this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      final w = constraints.maxWidth;
-      final fontSize = (w * 0.09).clamp(11.0, 14.0);
-      final arrowSize = (w * 0.06).clamp(9.0, 12.0);
-      final labelPadV = (w * 0.045).clamp(6.0, 10.0);
-
-      return GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => ProfilePage(eo: eo)),
-          );
-        },
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 8,
+              offset: Offset(0, 4),
+            ),
+          ],
+          
+          image: DecorationImage(
+            image: eo.image != null && eo.image!.isNotEmpty
+                ? NetworkImage(eo.image!) as ImageProvider
+                : const AssetImage('assets/images/ballroom.jpg'),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            gradient: const LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Color(0xFFFFFFFF), Color(0xFFD8D7EC)],
+            gradient: LinearGradient(
+              begin: Alignment.bottomCenter,
+              end: Alignment.center,
+              colors: [
+                Colors.black.withValues(alpha: 0.8),
+                Colors.transparent,
+              ],
             ),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFF102B53).withOpacity(0.15),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
           ),
-          clipBehavior: Clip.antiAlias,
+          padding: const EdgeInsets.all(12),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    Image.network(
-                      eo.imageUrl,
-                      fit: BoxFit.cover,
-                      loadingBuilder: (ctx, child, progress) {
-                        if (progress == null) return child;
-                        return Container(
-                          color: const Color(0xFFD6E4F7),
-                          child: const Center(
-                            child: CircularProgressIndicator(
-                              color: Color(0xFF102B53),
-                              strokeWidth: 2,
-                            ),
-                          ),
-                        );
-                      },
-                      errorBuilder: (_, __, ___) => Container(
-                        color: const Color(0xFFD6E4F7),
-                        child: const Icon(
-                          Icons.image_not_supported_rounded,
-                          color: Colors.grey,
-                          size: 40,
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: 0, left: 0, right: 0,
-                      height: 40,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Colors.black.withOpacity(0.15),
-                              Colors.transparent,
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+              Text(
+                eo.name,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
                 ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
-              Container(
-                padding: EdgeInsets.symmetric(
-                    horizontal: w * 0.08, vertical: labelPadV),
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Color(0xFF102B53), Color(0xFF2A3A7C)],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        eo.name,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: fontSize,
-                          fontWeight: FontWeight.w600,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
+              const SizedBox(height: 4),
+              Row(
+                children: [
+                  const Icon(Icons.star, color: Colors.amber, size: 14),
+                  const SizedBox(width: 4),
+                  Text(
+                    eo.rating.toString(),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
                     ),
-                    Icon(Icons.arrow_forward_ios_rounded,
-                        color: Colors.white70, size: arrowSize),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ],
           ),
         ),
-      );
-    });
-  }
-}import 'package:flutter/material.dart';
-import 'package:eo_app/models/event_organizer.dart';
-import 'package:eo_app/screens/EOProfile_screen.dart';
-
-class EOCard extends StatelessWidget {
-  final EventOrganizer eo;
-
-  const EOCard({super.key, required this.eo});
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      final w = constraints.maxWidth;
-      final fontSize = (w * 0.09).clamp(11.0, 14.0);
-      final arrowSize = (w * 0.06).clamp(9.0, 12.0);
-      final labelPadV = (w * 0.045).clamp(6.0, 10.0);
-
-      return GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => ProfilePage(eo: eo)),
-          );
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            gradient: const LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Color(0xFFFFFFFF), Color(0xFFD8D7EC)],
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFF102B53).withOpacity(0.15),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          clipBehavior: Clip.antiAlias,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    Image.network(
-                      eo.imageUrl,
-                      fit: BoxFit.cover,
-                      loadingBuilder: (ctx, child, progress) {
-                        if (progress == null) return child;
-                        return Container(
-                          color: const Color(0xFFD6E4F7),
-                          child: const Center(
-                            child: CircularProgressIndicator(
-                              color: Color(0xFF102B53),
-                              strokeWidth: 2,
-                            ),
-                          ),
-                        );
-                      },
-                      errorBuilder: (_, __, ___) => Container(
-                        color: const Color(0xFFD6E4F7),
-                        child: const Icon(
-                          Icons.image_not_supported_rounded,
-                          color: Colors.grey,
-                          size: 40,
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: 0, left: 0, right: 0,
-                      height: 40,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Colors.black.withOpacity(0.15),
-                              Colors.transparent,
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(
-                    horizontal: w * 0.08, vertical: labelPadV),
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Color(0xFF102B53), Color(0xFF2A3A7C)],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        eo.name,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: fontSize,
-                          fontWeight: FontWeight.w600,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ),
-                    Icon(Icons.arrow_forward_ios_rounded,
-                        color: Colors.white70, size: arrowSize),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    });
+      ),
+    );
   }
 }
