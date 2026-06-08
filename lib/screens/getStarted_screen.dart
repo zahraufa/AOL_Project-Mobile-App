@@ -40,18 +40,18 @@ class WelcomeScreen extends StatelessWidget {
               children: [
                 Image.asset(
                       'assets/images/logo.png',
-                      height: 35,
-                      width: 35,
+                      height: 55,
+                      width: 55,
                       fit: BoxFit.contain
                 ),
-                SizedBox(width: 8),
+                SizedBox(width: 1),
                 Text(
                   'partuisque',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 28,
                     fontWeight: FontWeight.w600,
-                    letterSpacing: -0.5,
+                    letterSpacing: 1,
                   ),
                 ),
               ],
@@ -90,7 +90,7 @@ class WelcomeScreen extends StatelessWidget {
                         height: 1.3,
                       ),
                     ),
-                    const Spacer(),
+                    const SizedBox(height: 50),
                     
                     // login button
                     CustomButton(

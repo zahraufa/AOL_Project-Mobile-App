@@ -22,14 +22,14 @@ class MyApp extends StatelessWidget {
       
       builder: (context, child) {
         return Scaffold(
-          backgroundColor: Colors.grey[300],
+          backgroundColor: const Color.fromARGB(255, 107, 107, 107),
           body: Center(
             child: Container(
               width: 402,
               height: 874,
               clipBehavior: Clip.antiAlias,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: const Color.fromARGB(255, 117, 117, 117),
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: const [
                   BoxShadow(
