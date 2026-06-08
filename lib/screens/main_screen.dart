@@ -1,3 +1,4 @@
+import 'package:eo_app/screens/compare_screen.dart';
 import 'package:flutter/material.dart';
 import 'search_screen.dart';
 
@@ -14,7 +15,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _pages = [
     const Center(child: Text('Home Page - Coming Soon')),
     const SearchScreen(),
-    const Center(child: Text('Compare Page - Coming Soon')),
+    const CompareScreen(),
     const Center(child: Text('Chat Page - Coming Soon')),
     const Center(child: Text('Profile Page - Coming Soon')),
   ];
