@@ -1,196 +1,196 @@
 import 'package:flutter/material.dart';
-import 'package:eo_app/models/event_organizer.dart';
-import 'package:eo_app/services/eo_service.dart';
-import 'package:eo_app/widgets/eo_card.dart';
-import 'package:eo_app/widgets/bottom_nav_bar.dart';
+import '../models/event_organizer.dart';
+import '../services/api_services.dart';
+import '../widgets/eo_card.dart';
+//import 'eo_profile_screen.dart';
 
-
-class SearchPage extends StatefulWidget {
-  const SearchPage({super.key});
+class SearchScreen extends StatefulWidget {
+  final bool isSelectionMode;
+  const SearchScreen({Key? key, this.isSelectionMode = false}) : super(key: key);
 
   @override
-  State<SearchPage> createState() => _SearchPageState();
+  State<SearchScreen> createState() => _SearchScreenState();
 }
 
-class _SearchPageState extends State<SearchPage> {
-  static const Color _navy = Color(0xFF102B53);
-  static const Color _bgColor = Color(0xFFE6EAF3);
+class _SearchScreenState extends State<SearchScreen> {
+  final ApiServices _apiServices = ApiServices();
+  List<EventOrganizerModel> _eoList = [];
+  bool _isLoading = true;
 
-  int _selectedIndex = 0;
-  String _selectedLocation = 'All Locations';
   final TextEditingController _searchController = TextEditingController();
-  String _searchQuery = '';
-
-  // TODO: Ganti dengan Future<List<EventOrganizer>> dari EOService.getEOs()
-  // saat backend sudah siap, gunakan FutureBuilder
-  late List<EventOrganizer> _allEOs;
-
-  final List<String> _locations = [
-    'All Locations',
-    'Jakarta Selatan',
-    'Jakarta Pusat',
-    'Jakarta Barat',
-    'Jakarta Timur',
-    'Tangerang',
-    'Bekasi',
-    'Depok',
-    'Bogor',
+  final List<String> _categories = [
+    'all category',
+    'Wedding Event',
+    'Corporate Event',
+    'Birthday Party',
+    'Seminar'
   ];
+
+  String _selectedCategory = 'all category';
 
   @override
   void initState() {
     super.initState();
-    _allEOs = EOService.getEOs();
+    _fetchEoData();
   }
 
-  List<EventOrganizer> get _filteredEOs {
-    return _allEOs.where((eo) {
-      final matchSearch =
-          eo.name.toLowerCase().contains(_searchQuery.toLowerCase());
-      final matchLocation = _selectedLocation == 'All Locations' ||
-          eo.location == _selectedLocation;
-      return matchSearch && matchLocation;
-    }).toList();
+  Future<void> _fetchEoData({String? category}) async {
+    setState(() => _isLoading = true);
+    final data = await _apiServices.getEventOrganizers(category: category);
+    
+    if (!mounted) return;
+    setState(() {
+      _eoList = data;
+      _isLoading = false;
+    });
+  }
+
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      final w = constraints.maxWidth;
-      final contentWidth = w > 600 ? 420.0 : w;
-
-      return Scaffold(
-        backgroundColor: _bgColor,
-        body: Center(
-          child: SizedBox(
-            width: contentWidth,
-            child: Container(
-              decoration: const BoxDecoration(
-                gradient: SweepGradient(
-                  center: Alignment.topRight,
-                  colors: [
-                    Color(0xFFE6EAF3),
-                    Color(0xFFA3A1C8),
-                    Color(0xFFE6EAF3),
-                    Color(0xFFA3A1C8),
-                    Color(0xFFE6EAF3),
-                  ],
-                ),
-              ),
-              child: SafeArea(
-                child: Column(
-                  children: [
-                    _buildTopBar(w),
-                    Expanded(
-                      child: _filteredEOs.isEmpty
-                          ? const Center(
-                              child: Text('No event organizers found.',
-                                  style: TextStyle(color: Colors.grey)))
-                          : GridView.builder(
-                              padding: EdgeInsets.all(w * 0.04),
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                crossAxisSpacing: w * 0.03,
-                                mainAxisSpacing: w * 0.03,
-                                childAspectRatio: 1.0,
-                              ),
-                              itemCount: _filteredEOs.length,
-                              itemBuilder: (context, index) {
-                                return EOCard(eo: _filteredEOs[index]);
-                              },
-                            ),
-                    ),
-                    AppBottomNavBar(
-                      selectedIndex: _selectedIndex,
-                      onTap: (i) => setState(() => _selectedIndex = i),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-    });
-  }
-
-  Widget _buildTopBar(double w) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: w * 0.03, vertical: 12),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [_navy, Color(0xFF1E4A8A)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(20),
-          bottomRight: Radius.circular(20),
-        ),
-        boxShadow: [
-          BoxShadow(
-              color: Color(0x66102B53), blurRadius: 8, offset: Offset(0, 4)),
-        ],
-      ),
-      child: Row(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Column(
         children: [
-          Expanded(
-            flex: 3,
-            child: Container(
-              height: 42,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(30)),
-              child: TextField(
-                controller: _searchController,
-                onChanged: (val) => setState(() => _searchQuery = val),
-                style: const TextStyle(fontSize: 13),
-                decoration: const InputDecoration(
-                  hintText: 'search',
-                  hintStyle: TextStyle(color: Colors.grey, fontSize: 13),
-                  prefixIcon:
-                      Icon(Icons.search, color: Colors.grey, size: 20),
-                  border: InputBorder.none,
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+          SizedBox(
+            height: 160,
+            child: Stack(
+              children: [
+                Container(
+                  height: 140,
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF0D2546),
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(30),
+                      bottomRight: Radius.circular(30),
+                    ),
+                    image: DecorationImage(
+                      image: AssetImage('assets/images/ballroom.jpg'),
+                      fit: BoxFit.cover,
+                      opacity: 0.3,
+                    ),
+                  ),
                 ),
-              ),
+
+                // SEARCH & DROPDOWN BAR
+                Positioned(
+                  bottom: 0,
+                  left: 20,
+                  right: 20,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child: Container(
+                          height: 45,
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 8)],
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: TextField(
+                                  controller: _searchController,
+                                  decoration: const InputDecoration(
+                                    hintText: 'search',
+                                    hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
+                                    border: InputBorder.none,
+                                    isDense: true,
+                                  ),
+                                ),
+                              ),
+                              const Icon(Icons.search, color: Colors.grey, size: 20),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      
+                      // dropdown
+                      Expanded(
+                        flex: 2,
+                        child: Container(
+                          height: 45,
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 8)],
+                          ),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<String>(
+                              value: _selectedCategory,
+                              isExpanded: true,
+                              icon: const Icon(Icons.arrow_drop_down, color: Colors.grey),
+                              style: const TextStyle(color: Colors.grey, fontSize: 11),
+                              onChanged: (String? newValue) {
+                                if (newValue != null){
+                                  setState(() {
+                                    _selectedCategory = newValue;
+                                  });
+                                  _fetchEoData(category: newValue);
+                                }
+                              },
+                              items: _categories.map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
-          const SizedBox(width: 8),
+          
+          const SizedBox(height: 15),
+
           Expanded(
-            flex: 2,
-            child: Container(
-              height: 42,
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(30)),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  value: _selectedLocation,
-                  isExpanded: true,
-                  icon: const Icon(Icons.arrow_drop_down,
-                      color: Colors.grey, size: 18),
-                  style: const TextStyle(
-                      color: Colors.black87,
-                      fontSize: 11,
-                      fontFamily: 'Roboto'),
-                  items: _locations
-                      .map((loc) => DropdownMenuItem(
-                            value: loc,
-                            child: Text(loc,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(fontSize: 11)),
-                          ))
-                      .toList(),
-                  onChanged: (val) {
-                    if (val != null) setState(() => _selectedLocation = val);
-                  },
-                ),
-              ),
-            ),
+            child: _isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : _eoList.isEmpty
+                    ? const Center(child: Text('No EO'))
+                    : GridView.builder(
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2, 
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 16,
+                          childAspectRatio: 0.85, 
+                        ),
+                        itemCount: _eoList.length,
+                        itemBuilder: (context, index) {
+                          final eo = _eoList[index];
+                          return EoCard(
+                            eo: eo,
+                            onTap: () {
+                              if (widget.isSelectionMode) {
+                                Navigator.pop(context, eo);
+                              } else {
+                                // Navigator.push(
+                                //   context,
+                                //   MaterialPageRoute(builder: (context) => EoProfileScreen(eo: eo)),
+                                // );
+                              }
+                            },
+                          );
+                        },
+                      ),
           ),
         ],
       ),

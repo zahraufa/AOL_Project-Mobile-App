@@ -1,3 +1,4 @@
+import 'package:eo_app/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import '../models/login_model.dart';
 import '../services/api_services.dart';
@@ -43,6 +44,12 @@ class _LoginScreenState extends State<LoginScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Login Success!')),
       );
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const MainScreen()),
+      );
+
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Login Failed')),
