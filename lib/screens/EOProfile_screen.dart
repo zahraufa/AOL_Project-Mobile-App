@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/event_organizer.dart';
 import '../models/package_model.dart';
 import '../services/api_services.dart';
+import 'package_screen.dart';
 
 class EoProfileScreen extends StatefulWidget {
   final EventOrganizerModel eo;
@@ -263,7 +264,15 @@ class _EoProfileScreenState extends State<EoProfileScreen> {
                     alignment: Alignment.centerRight,
                     child: GestureDetector(
                       onTap: () {
-                        // Nanti diarahkan ke layar See All Packages
+                        Navigator.push(
+                         context,
+                         MaterialPageRoute(
+                           builder: (context) => EoPackagesScreen(
+                             eo: widget.eo,
+                             packages: _packages,
+                           ),
+                         ),
+                       );
                       },
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
