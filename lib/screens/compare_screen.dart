@@ -42,11 +42,10 @@ class _CompareScreenState extends State<CompareScreen> {
             decoration: const BoxDecoration(
               color: Color(0xFF0D2546),
               borderRadius: BorderRadius.only(bottomLeft: Radius.circular(30), bottomRight: Radius.circular(30)),
-            ),
-            child: const SafeArea(
-              child: Padding(
-                padding: EdgeInsets.only(left: 20, top: 10),
-                child: Text('compare page', style: TextStyle(color: Colors.white54, fontSize: 16)),
+              image: DecorationImage(
+                image: AssetImage('assets/images/ballroom.jpg'),
+                fit: BoxFit.cover,
+                opacity: 0.15,
               ),
             ),
           ),
