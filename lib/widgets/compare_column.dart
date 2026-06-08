@@ -66,47 +66,78 @@ class _CompareColumnState extends State<CompareColumn> {
         Text(widget.eo.name, style: const TextStyle(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
         const SizedBox(height: 10),
 
+        if (selectedPackage != null) ...[
+          Text(
+            selectedPackage!.name,
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 4),
+
         // DROPDOWN PACKAGE
         const Text('Package', style: TextStyle(fontSize: 10, color: Colors.grey)),
         if (packages.isNotEmpty)
           Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            height: 30,
             padding: const EdgeInsets.symmetric(horizontal: 12),
-            decoration: BoxDecoration(color: Colors.blue.shade50, borderRadius: BorderRadius.circular(8)),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade100,
+              borderRadius: BorderRadius.circular(20),
+            ),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<PackageModel>(
-                isExpanded: true,
                 value: selectedPackage,
-                style: const TextStyle(fontSize: 12, color: Colors.black),
-                onChanged: (val) => setState(() => selectedPackage = val),
+                icon: const Icon(Icons.arrow_drop_down, size: 16, color: Colors.grey),
+                style: const TextStyle(fontSize: 11, color: Colors.black87),
+                onChanged: (PackageModel? newValue) {
+  
+                  setState(() {
+                    selectedPackage = newValue;
+                  });
+                },
                 items: packages.map((pkg) => DropdownMenuItem(
                   value: pkg,
-                  child: Text(pkg.name),
+                  child: Text('Rp ${pkg.price.toInt()}'), 
                 )).toList(),
               ),
             ),
           ),
+        ] else ...[
+          const Text('No packages available', style: TextStyle(fontSize: 10, color: Colors.grey)),
+        ],
 
-        const Divider(),
-        const Text('Details', style: TextStyle(fontSize: 12)),
-        const Divider(),
+        const SizedBox(height: 12),
+        const Divider(height: 1, thickness: 1),
+        const Padding(
+          padding: EdgeInsets.symmetric(vertical: 8),
+          child: Text('Details', style: TextStyle(fontSize: 12)),
+        ),
+        const Divider(height: 1, thickness: 1),
 
         // PACKAGE DETAILS
         Expanded(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 if (selectedPackage != null) ...[
-                  Text(selectedPackage!.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                  Text(
+                    selectedPackage!.name,
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
+                    textAlign: TextAlign.center,
+                  ),
                   const SizedBox(height: 4),
-                  Text(selectedPackage!.description, style: const TextStyle(fontSize: 10, color: Colors.grey)),
+                  Text(
+                    selectedPackage!.description,
+                    style: const TextStyle(fontSize: 10, color: Colors.grey, height: 1.4),
+                    textAlign: TextAlign.center,
+                  ),
                 ],
                 
-                const SizedBox(height: 16),
-                const Center(child: Text('add ons', style: TextStyle(fontSize: 12))),
-                const SizedBox(height: 8),
+                const SizedBox(height: 20),
+                const Text('add ons', style: TextStyle(fontSize: 12)),
+                const SizedBox(height: 10),
 
                 // CHECKBOX ADD-ONS
                 ...addOns.map((addon) {
