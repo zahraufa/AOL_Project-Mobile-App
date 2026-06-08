@@ -1,29 +1,17 @@
 class PackageModel {
-  final String id;
-  final String eventType;
-  final String price;
-  final List<String> includes;
-  final String imageUrl;
+  final int id;
+  final String name;
+  final double price;
+  final String description;
 
-  const PackageModel({
-    required this.id,
-    required this.eventType,
-    required this.price,
-    required this.includes,
-    required this.imageUrl,
-  });
+  PackageModel({required this.id, required this.name, required this.price, required this.description});
 
-  // TODO: fromJson constructor untuk data dari backend
-  // factory PackageModel.fromJson(Map<String, dynamic> json) {
-  //   return PackageModel(
-  //     id: json['id'],
-  //     eventType: json['event_type'],
-  //     price: json['price'],
-  //     includes: List<String>.from(json['includes']),
-  //     imageUrl: json['image_url'],
-  //   );
-  // }
-
-  int get priceValue =>
-      int.tryParse(price.replaceAll('Rp', '').replaceAll('.', '').trim()) ?? 0;
+  factory PackageModel.fromJson(Map<String, dynamic> json) {
+    return PackageModel(
+      id: json['Package_ID'] ?? 0,
+      name: json['Package_Name'] ?? '',
+      price: double.tryParse(json['Package_Price'].toString()) ?? 0.0,
+      description: json['Package_Description'] ?? '',
+    );
+  }
 }
