@@ -1,4 +1,5 @@
 import 'package:eo_app/screens/main_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import '../models/login_model.dart';
 import '../services/api_services.dart';
@@ -44,6 +45,9 @@ class _LoginScreenState extends State<LoginScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Login Success!')),
       );
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('username', _emailController.text.split('@')[0]);
 
       Navigator.pushReplacement(
         context,
