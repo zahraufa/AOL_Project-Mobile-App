@@ -1,6 +1,7 @@
-import 'package:eo_app/screens/compare_screen.dart';
 import 'package:flutter/material.dart';
 import 'search_screen.dart';
+import 'compare_screen.dart';
+import 'home_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -13,7 +14,7 @@ class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 1;
 
   final List<Widget> _pages = [
-    const Center(child: Text('Home Page - Coming Soon')),
+    const HomeScreen(),
     const SearchScreen(),
     const CompareScreen(),
     const Center(child: Text('Chat Page - Coming Soon')),
