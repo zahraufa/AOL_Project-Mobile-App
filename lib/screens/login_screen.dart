@@ -1,73 +1,58 @@
 import 'package:flutter/material.dart';
-import '../models/signup_model.dart';
+import '../models/login_model.dart';
 import '../services/api_services.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/custom_button.dart';
-import 'login_screen.dart';
+import 'signup_screen.dart';
 
-class SignupScreen extends StatefulWidget {
-  const SignupScreen({Key? key}) : super(key: key);
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  State<SignupScreen> createState() => _SignupScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
-  final TextEditingController _usernameController = TextEditingController();
+class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   
   final ApiServices _apiService = ApiServices();
   bool _isLoading = false;
 
-  void _handleSignup() async {
-    if (_usernameController.text.isEmpty || 
-        _emailController.text.isEmpty || 
-        _phoneController.text.isEmpty || 
-        _passwordController.text.isEmpty) {
+  void _handleLogin() async {
+    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('all column must be filled')),
+        const SnackBar(content: Text('Email and Password must be filled')),
       );
       return;
     }
 
     setState(() => _isLoading = true);
     
-    final newUser = SignupModel(
-      username: _usernameController.text,
+    final userLogin = LoginModel(
       email: _emailController.text,
       password: _passwordController.text,
-      phoneNumber: _phoneController.text,
     );
 
-    bool success = await _apiService.registerUser(newUser);
+    bool success = await _apiService.loginUser(userLogin);
 
     if (!mounted) return;
     setState(() => _isLoading = false);
 
     if (success) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Registration Success')),
+        const SnackBar(content: Text('Login Success!')),
       );
-      
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const LoginScreen()),
-      );
-
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Registration failed, try again')),
+        const SnackBar(content: Text('Login Failed')),
       );
     }
   }
 
   @override
   void dispose() {
-    _usernameController.dispose();
     _emailController.dispose();
-    _phoneController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -75,12 +60,10 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final double formHeightPercent = 0.65;
 
     return Scaffold(
       body: Stack(
         children: [
-          // 1. BG image
           Positioned.fill(
             child: Container(
               decoration: const BoxDecoration(
@@ -92,14 +75,12 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
           ),
           
-          // 2. overlay bg
           Positioned.fill(
             child: Container(
-              color: const Color(0xFF0D2546).withValues(alpha: 0.85), 
+              color: const Color(0xFF0D2546).withValues(alpha: 0.85),
             ),
           ),
           
-          // 3. logo partuisque
           SafeArea(
             child: Align(
               alignment: Alignment.topCenter,
@@ -129,14 +110,13 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
           ),
 
-          // 4. signup text
           Positioned(
-            top: size.height * 0.25,
+            top: size.height * 0.32, 
             left: 0,
             right: 0,
             child: const Center(
               child: Text(
-                'SIGN UP',
+                'LOGIN',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 36,
@@ -147,11 +127,10 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
           ),
 
-          // 5. white field
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              height: size.height * formHeightPercent, 
+              height: size.height * 0.55, 
               width: double.infinity,
               decoration: const BoxDecoration(
                 color: Colors.white,
@@ -165,39 +144,27 @@ class _SignupScreenState extends State<SignupScreen> {
                 child: Column(
                   children: [
                     CustomTextField(
-                      label: 'Username',
-                      controller: _usernameController,
-                    ),
-                    const SizedBox(height: 16),
-                    CustomTextField(
                       label: 'Email',
                       controller: _emailController,
                     ),
-                    const SizedBox(height: 16),
-                    
-                    CustomTextField(
-                      label: 'Phone Number',
-                      controller: _phoneController,
-                    ),
-                    const SizedBox(height: 16),
-
+                    const SizedBox(height: 20),
                     CustomTextField(
                       label: 'Password',
                       controller: _passwordController,
                       isObscure: true, 
                     ),
-                    const SizedBox(height: 25),
-
+                    const SizedBox(height: 30),
+                    
                     _isLoading
                         ? const CircularProgressIndicator()
                         : CustomButton(
-                            text: 'Sign up',
-                            onPressed: _handleSignup,
+                            text: 'Login',
+                            onPressed: _handleLogin,
                           ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 25),
                     
                     const Text(
-                      'already have an account?',
+                      "don't have account?",
                       style: TextStyle(
                         color: Color(0xFF102B53),
                         fontSize: 12,
@@ -209,10 +176,10 @@ class _SignupScreenState extends State<SignupScreen> {
                     FractionallySizedBox(
                       widthFactor: 0.5,
                       child: CustomButton(
-                        text: 'Login',
+                        text: 'Sign up',
                         isOutlined: true,
                         onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const SignupScreen()));
                         },
                       ),
                     ),

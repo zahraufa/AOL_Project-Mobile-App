@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
           seedColor: const Color(0xFF102B53),
         ),
         useMaterial3: true,
-        fontFamily: GoogleFonts.tinos().fontFamily, 
+        fontFamily: GoogleFonts.alexandria().fontFamily, 
       ),
       home: const SignupScreen(),
     );

@@ -1,22 +1,16 @@
-class SignupModel {
-  final String username;
+class LoginModel {
   final String email;
   final String password;
-  final String phoneNumber;
 
-  SignupModel ({
-    required this.username,
+  LoginModel({
     required this.email,
     required this.password,
-    required this.phoneNumber
   });
 
   Map<String, dynamic> toJson() {
     return {
-      'Username': username,
       'User_email': email,
       'User_password': password,
-      'User_PhoneNumber': phoneNumber,
     };
   }
 }
