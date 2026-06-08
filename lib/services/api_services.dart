@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/signup_model.dart';
 import '../models/login_model.dart';
+import '../models/event_organizer.dart';
 
 class ApiServices {
   final String baseUrl = 'https://aolproject-mobile-app-production.up.railway.app';
@@ -48,6 +49,27 @@ class ApiServices {
     } catch (e) {
       print('Exception Login: $e');
       return false;
+    }
+  }
+
+  // GET eo
+  Future<List<EventOrganizerModel>> getEventOrganizers() async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/event-organizer'));
+
+      if (response.statusCode == 200) {
+        List<dynamic> body = jsonDecode(response.body);
+        List<EventOrganizerModel> eos = body
+            .map((dynamic item) => EventOrganizerModel.fromJson(item))
+            .toList();
+        return eos;
+      } else {
+        print('Failed to get eo: ${response.body}');
+        return [];
+      }
+    } catch (e) {
+      print('Exception getEventOrganizers: $e');
+      return [];
     }
   }
 }

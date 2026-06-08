@@ -1,29 +1,25 @@
-class EventOrganizer {
-  final String id;
+class EventOrganizerModel {
+  final int id;
   final String name;
-  final String imageUrl;
-  final String profileImageUrl;
-  final String location;
   final double rating;
+  final String? image;
+  final String address;
 
-  const EventOrganizer({
+  EventOrganizerModel({
     required this.id,
     required this.name,
-    required this.imageUrl,
-    required this.profileImageUrl,
-    required this.location,
     required this.rating,
+    this.image,
+    required this.address,
   });
 
-  // TODO: fromJson constructor untuk data dari backend
-  // factory EventOrganizer.fromJson(Map<String, dynamic> json) {
-  //   return EventOrganizer(
-  //     id: json['id'],
-  //     name: json['name'],
-  //     imageUrl: json['image_url'],
-  //     profileImageUrl: json['profile_image_url'],
-  //     location: json['location'],
-  //     rating: (json['rating'] as num).toDouble(),
-  //   );
-  // }
+  factory EventOrganizerModel.fromJson(Map<String, dynamic> json) {
+    return EventOrganizerModel(
+      id: json['EO_ID'] ?? 0,
+      name: json['EO_name'] ?? 'Unknown EO',
+      rating: double.tryParse(json['EO_Rating'].toString()) ?? 0.0,
+      image: json['EO_Image'],
+      address: json['EO_Address'] ?? '',
+    );
+  }
 }
