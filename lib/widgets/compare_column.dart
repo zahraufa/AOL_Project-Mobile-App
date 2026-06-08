@@ -80,7 +80,7 @@ class _CompareColumnState extends State<CompareColumn> {
           const SizedBox(height: 4),
 
         // DROPDOWN PACKAGE
-        const Text('Package', style: TextStyle(fontSize: 10, color: Colors.grey)),
+        const Text('Price', style: TextStyle(fontSize: 10, color: Colors.grey)),
         if (packages.isNotEmpty)
           Container(
             height: 30,
