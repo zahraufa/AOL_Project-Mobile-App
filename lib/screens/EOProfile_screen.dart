@@ -1,276 +1,301 @@
 import 'package:flutter/material.dart';
-import 'package:eo_app/models/event_organizer.dart';
-import 'package:eo_app/screens/package_screen.dart';      
-import 'package:eo_app/widgets/bottom_nav_bar.dart';
-import 'package:eo_app/widgets/package_preview_card.dart';
+import '../models/event_organizer.dart';
+import '../models/package_model.dart';
+import '../services/api_services.dart';
 
-class ProfilePage extends StatefulWidget {
-  final EventOrganizer eo;
+class EoProfileScreen extends StatefulWidget {
+  final EventOrganizerModel eo;
 
-  const ProfilePage({super.key, required this.eo});
+  const EoProfileScreen({Key? key, required this.eo}) : super(key: key);
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<EoProfileScreen> createState() => _EoProfileScreenState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
-  static const Color _navy = Color(0xFF102B53);
-  static const Color _bgColor = Color(0xFFE6EAF3);
+class _EoProfileScreenState extends State<EoProfileScreen> {
+  final ApiServices _apiServices = ApiServices();
+  
+  bool _isLoading = true;
+  String _description = '';
+  List<String> _categories = [];
+  List<PackageModel> _packages = [];
 
-  int _selectedIndex = 0;
+  @override
+  void initState() {
+    super.initState();
+    _fetchProfileDetails();
+  }
 
-  // TODO: Ambil dari PackageService.getPreviewPackages(eo.id)
-  final List<Map<String, String>> _previewPackages = [
-    {
-      'name': 'Birthday Party',
-      'image':
-          'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=600',
-    },
-    {
-      'name': 'Gathering',
-      'image':
-          'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=600',
-    },
-  ];
+  Future<void> _fetchProfileDetails() async {
+    final data = await _apiServices.getEoDetails(widget.eo.id);
+    
+    if (data != null && mounted) {
+      final String rawDesc = data['EO_Description'] ?? 'Penyedia layanan Event Organizer profesional untuk berbagai kebutuhan acara Anda.';
+      
+      final List<dynamic> rawCats = data['categories'] as List<dynamic>? ?? [];
+      
+      final List<dynamic> rawPkgs = data['packages'] as List<dynamic>? ?? 
+                                    data['eo_package'] as List<dynamic>? ?? [];
+
+      setState(() {
+        _description = rawDesc;
+        _categories = rawCats.map((c) => c.toString()).toList();
+        _packages = rawPkgs.map((p) => PackageModel.fromJson(p)).toList();
+        _isLoading = false;
+      });
+    } else {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  Widget _buildStarRating(double rating) {
+    int fullStars = rating.floor();
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(5, (index) {
+        if (index < fullStars) {
+          return const Icon(Icons.star, color: Colors.amber, size: 24);
+        } else if (index == fullStars && rating % 1 != 0) {
+          return const Icon(Icons.star_half, color: Colors.amber, size: 24);
+        } else {
+          return const Icon(Icons.star_border, color: Colors.grey, size: 24);
+        }
+      }),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      final w = constraints.maxWidth;
-      final contentWidth = w > 600 ? 420.0 : w;
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // header
+            SizedBox(
+              height: 280,
+              child: Stack(
+                alignment: Alignment.topCenter,
+                clipBehavior: Clip.none,
+                children: [
+                  ClipPath(
+                    clipper: HeaderClipper(),
+                    child: Container(
+                      height: 220,
+                      width: double.infinity,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF0D2546),
+                        image: DecorationImage(
+                          image: AssetImage('assets/images/ballroom.jpg'),
+                          fit: BoxFit.cover,
+                          opacity: 0.3,
+                        ),
+                      ),
+                      child: SafeArea(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          child: Stack(
+                            children: [
 
-      return Scaffold(
-        backgroundColor: _bgColor,
-        body: Center(
-          child: SizedBox(
-            width: contentWidth,
-            child: Container(
-              decoration: const BoxDecoration(
-                gradient: SweepGradient(
-                  center: Alignment.topRight,
-                  colors: [
-                    Color(0xFFE6EAF3),
-                    Color(0xFFA3A1C8),
-                    Color(0xFFE6EAF3),
-                    Color(0xFFA3A1C8),
-                    Color(0xFFE6EAF3),
-                  ],
-                ),
-              ),
-              child: SafeArea(
-                child: Column(
-                  children: [
-                    _buildTopBar(),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            _buildProfileCard(contentWidth),
-                            _buildPackagesSection(),
-                          ],
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: GestureDetector(
+                                  onTap: () => Navigator.pop(context),
+                                  child: Container(
+                                    padding: const EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.white, width: 1.5),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 16),
+                                  ),
+                                ),
+                              ),
+
+                              const Align(
+                                alignment: Alignment.topCenter,
+                                child: Text(
+                                  'PROFILE',
+                                  style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold, letterSpacing: 1.2),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                    AppBottomNavBar(
-                      selectedIndex: _selectedIndex,
-                      onTap: (i) => setState(() => _selectedIndex = i),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-    });
-  }
+                  ),
 
-  Widget _buildTopBar() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [_navy, Color(0xFF1E4A8A)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(20),
-          bottomRight: Radius.circular(20),
-        ),
-        boxShadow: [
-          BoxShadow(
-              color: Color(0x66102B53), blurRadius: 8, offset: Offset(0, 4)),
-        ],
-      ),
-      child: Row(
-        children: [
-          GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Container(
-              height: 38,
-              width: 38,
-              decoration: BoxDecoration(
-                color: Colors.white24,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: Colors.white30),
-              ),
-              child: const Icon(Icons.chevron_left_rounded,
-                  color: Colors.white, size: 24),
-            ),
-          ),
-          const Expanded(
-            child: Text(
-              'PROFILE',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 2,
-              ),
-            ),
-          ),
-          const SizedBox(width: 38),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildProfileCard(double w) {
-    final avatarSize = (w * 0.28).clamp(90.0, 120.0);
-
-    return Container(
-      margin: const EdgeInsets.fromLTRB(16, 20, 16, 0),
-      padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.85),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF102B53).withOpacity(0.12),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Container(
-            width: avatarSize,
-            height: avatarSize,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: _navy, width: 3),
-              boxShadow: [
-                BoxShadow(
-                  color: _navy.withOpacity(0.2),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: ClipOval(
-              child: Image.network(
-                widget.eo.profileImageUrl,
-                fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => Container(
-                  color: const Color(0xFFD6E4F7),
-                  child: const Icon(Icons.person, size: 50, color: Colors.grey),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            widget.eo.name,
-            style: TextStyle(
-              color: _navy,
-              fontSize: (w * 0.055).clamp(18.0, 24.0),
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Container(height: 1.5, width: 140, color: const Color(0x4D102B53)),
-          const SizedBox(height: 14),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(
-              5,
-              (i) => Icon(Icons.star_rounded,
-                  color: const Color(0xFFFFC107),
-                  size: (w * 0.075).clamp(24.0, 32.0)),
-            ),
-          ),
-          const SizedBox(height: 6),
-          GestureDetector(
-            // TODO: Navigasi ke halaman Reviews dari backend
-            // onTap: () => Navigator.push(context, MaterialPageRoute(
-            //   builder: (_) => ReviewsPage(eoId: widget.eo.id))),
-            onTap: () {},
-            child: const Text(
-              'see reviews',
-              style: TextStyle(
-                color: Color(0xFF102B53),
-                fontSize: 12,
-                decoration: TextDecoration.underline,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPackagesSection() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 20, 16, 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Packages',
-            style: TextStyle(
-              color: Color(0xFF102B53),
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 12),
-          ..._previewPackages.map((pkg) => Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: PackagePreviewCard(
-                  name: pkg['name']!,
-                  imageUrl: pkg['image']!,
-                ),
-              )),
-          Align(
-            alignment: Alignment.centerRight,
-            child: GestureDetector(
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => PackagePage()),
-              ),
-              child: const Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'see all packages',
-                    style: TextStyle(
-                      color: Color(0xFF102B53),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500,
+                  // profile
+                  Positioned(
+                    top: 130,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 4),
+                        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, 5))],
+                      ),
+                      child: CircleAvatar(
+                        radius: 65,
+                        backgroundColor: Colors.grey.shade300,
+                        backgroundImage: widget.eo.image != null ? NetworkImage(widget.eo.image!) : null,
+                        child: widget.eo.image == null ? const Icon(Icons.business, size: 50, color: Colors.grey) : null,
+                      ),
                     ),
                   ),
-                  SizedBox(width: 4),
-                  Icon(Icons.arrow_forward_rounded,
-                      color: Color(0xFF102B53), size: 16),
                 ],
               ),
             ),
-          ),
-        ],
+
+            // eo name n desc
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30),
+              child: Column(
+                children: [
+                  Text(
+                    widget.eo.name,
+                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: Colors.black87),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 8),
+                  
+                  Container(height: 1.5, width: 120, color: Colors.black),
+                  const SizedBox(height: 3),
+                  Container(height: 0.5, width: 100, color: Colors.black),
+                  const SizedBox(height: 16),
+
+                  if (_isLoading) 
+                    const CircularProgressIndicator()
+                  else ...[
+                    Text(
+                      _description,
+                      style: const TextStyle(color: Colors.grey, fontSize: 13, height: 1.5),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 16),
+
+                    _buildStarRating(widget.eo.rating),
+                  ],
+                ],
+              ),
+            ),
+            const SizedBox(height: 30),
+
+            // category
+            if (!_isLoading && _categories.isNotEmpty) ...[
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: const Text('Category', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Wrap(
+                  spacing: 10,
+                  runSpacing: 10,
+                  children: _categories.map((cat) {
+                    return Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF2A5C91),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(cat, style: const TextStyle(color: Colors.white, fontSize: 12)),
+                    );
+                  }).toList(),
+                ),
+              ),
+              const SizedBox(height: 30),
+            ],
+
+            // package
+            if (!_isLoading && _packages.isNotEmpty) ...[
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: const Text('Packages', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                ),
+              ),
+              const SizedBox(height: 12),
+              
+              ..._packages.take(2).map((pkg) {
+                return Container(
+                  height: 100,
+                  width: double.infinity,
+                  margin: const EdgeInsets.only(left: 24, right: 24, bottom: 16),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    image: DecorationImage(
+                      image: widget.eo.image != null ? NetworkImage(widget.eo.image!) : const AssetImage('assets/images/ballroom.jpg') as ImageProvider,
+                      fit: BoxFit.cover,
+                    ),
+                    boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 8, offset: Offset(0, 4))],
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      gradient: LinearGradient(
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                        colors: [Colors.black.withValues(alpha: 0.8), Colors.transparent],
+                      ),
+                    ),
+                    padding: const EdgeInsets.all(16),
+                    alignment: Alignment.bottomLeft,
+                    child: Text(
+                      pkg.name,
+                      style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                );
+              }).toList(),
+
+              // Tombol See All Packages
+              if (_packages.length > 2)
+                Padding(
+                  padding: const EdgeInsets.only(right: 24, bottom: 30),
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: GestureDetector(
+                      onTap: () {
+                        // Nanti diarahkan ke layar See All Packages
+                      },
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: const [
+                          Text('see all packages', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                          SizedBox(width: 4),
+                          Icon(Icons.arrow_forward, size: 14),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+            const SizedBox(height: 40),
+          ],
+        ),
       ),
     );
   }
+}
+
+class HeaderClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    var path = Path();
+    path.lineTo(0, size.height - 40);
+    path.quadraticBezierTo(size.width / 2, size.height + 20, size.width, size.height - 40);
+    path.lineTo(size.width, 0);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
