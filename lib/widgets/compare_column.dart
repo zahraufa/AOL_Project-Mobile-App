@@ -33,8 +33,13 @@ class _CompareColumnState extends State<CompareColumn> {
   Future<void> _fetchEoDetails() async {
     final data = await _apiServices.getEoDetails(widget.eo.id);
     if (data != null && mounted) {
-      final rawPackages = data['package'] as List<dynamic>? ?? [];
-      final rawServices = data['add_ons'] as List<dynamic>? ?? [];
+      print('Respon JSON untuk EO ID ${widget.eo.id}: $data');
+      final rawPackages = data['packages'] as List<dynamic>? ?? 
+                          data['eo_package'] as List<dynamic>? ?? 
+                          [];
+      final rawServices = data['add_ons'] as List<dynamic>? ?? 
+                          data['event_organizer_services'] as List<dynamic>? ?? 
+                          [];
 
       setState(() {
         packages = rawPackages.map((p) => PackageModel.fromJson(p)).toList();
