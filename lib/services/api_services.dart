@@ -84,4 +84,19 @@ class ApiServices {
       return [];
     }
   }
+
+  Future<Map<String, dynamic>?> getEoDetails(int id) async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/event-organizer/$id'));
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> body = jsonDecode(response.body);
+        final data = body['data'] ?? body;
+        return data;
+      }
+      return null;
+    } catch (e) {
+      print('Error getEoDetails: $e');
+      return null;
+    }
+  }
 }
