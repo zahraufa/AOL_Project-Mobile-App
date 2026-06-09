@@ -40,7 +40,12 @@ class _EoProfileScreenState extends State<EoProfileScreen> {
 
       setState(() {
         _description = rawDesc;
-        _categories = rawCats.map((c) => c.toString()).toList();
+        _categories = rawCats.map((c) {
+          if (c is Map){
+            return c['Category_Name']?.toString() ?? 'Unknown';
+          }
+          return c.toString();
+        }).toList();
         _packages = rawPkgs.map((p) => PackageModel.fromJson(p)).toList();
         _isLoading = false;
       });
@@ -257,22 +262,22 @@ class _EoProfileScreenState extends State<EoProfileScreen> {
               }).toList(),
 
               // Tombol See All Packages
-              if (_packages.length > 2)
+              if (_packages.isNotEmpty)
                 Padding(
-                  padding: const EdgeInsets.only(right: 24, bottom: 30),
+                  padding: const EdgeInsets.only(right: 24, bottom: 30, top: 8),
                   child: Align(
                     alignment: Alignment.centerRight,
                     child: GestureDetector(
                       onTap: () {
                         Navigator.push(
-                         context,
-                         MaterialPageRoute(
-                           builder: (context) => EoPackagesScreen(
-                             eo: widget.eo,
-                             packages: _packages,
-                           ),
-                         ),
-                       );
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EoPackagesScreen(
+                              eo: widget.eo,
+                              packages: _packages, 
+                            ),
+                          ),
+                        );
                       },
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
