@@ -122,7 +122,10 @@ class ApiServices {
       final token = await _getToken();
       final response = await http.post(
         Uri.parse('$baseUrl/transaction'),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
         body: jsonEncode({
           "event_date": "2026-12-20", 
           "event_location": "Jakarta", 
@@ -149,7 +152,10 @@ class ApiServices {
       final token = await _getToken();
       final response = await http.post(
         Uri.parse('$baseUrl/payments'),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
         body: jsonEncode({
           "transaction_id": transactionId,
           "payment_method": paymentMethod,
