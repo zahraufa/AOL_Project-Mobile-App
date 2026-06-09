@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/event_organizer.dart';
 import '../models/package_model.dart';
 // import 'package_detail_screen.dart';
-// import 'payment_screen.dart';
+ import 'payment_screen.dart';
 
 class EoPackagesScreen extends StatefulWidget {
   final EventOrganizerModel eo;
@@ -279,7 +279,16 @@ class _EoPackagesScreenState extends State<EoPackagesScreen> {
                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
                                     ),
                                     onPressed: () {
-                                      // Navigator.push(context, MaterialPageRoute(builder: (_) => PaymentScreen(package: pkg, eo: widget.eo)));
+                                      Navigator.push(
+                                        context, 
+                                        MaterialPageRoute(
+                                          builder: (_) => PaymentScreen(
+                                            eo: widget.eo,
+                                            package: pkg,
+                                            addOns: const [],
+                                          )
+                                        )
+                                      );
                                     },
                                     child: const Text('Book Now', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
                                   ),

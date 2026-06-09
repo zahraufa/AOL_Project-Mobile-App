@@ -3,6 +3,7 @@ import '../models/event_organizer.dart';
 import '../models/package_model.dart';
 import '../models/service_model.dart';
 import '../services/api_services.dart';
+import 'package:eo_app/screens/payment_screen.dart';
 
 class CompareColumn extends StatefulWidget {
   final EventOrganizerModel eo;
@@ -49,8 +50,18 @@ class _CompareColumnState extends State<CompareColumn> {
           packages.sort((a, b) => a.price.compareTo(b.price));
           selectedPackage = packages.first;
         }
+
+        final requiredServiceIds = addOns.where((s) => s.isRequired).map((s) => s.id);
+        for (var id in requiredServiceIds) {
+          if (!selectedAddOnIds.contains(id)) {
+            selectedAddOnIds.add(id);
+          }
+        }
+
         _isLoading = false;
       });
+    } else {
+      setState(() => _isLoading = false);
     }
   }
 
@@ -140,33 +151,65 @@ class _CompareColumnState extends State<CompareColumn> {
                   ),
                 ],
                 
-                const SizedBox(height: 20),
-                const Text('add ons', style: TextStyle(fontSize: 12)),
-                const SizedBox(height: 10),
+                const SizedBox(height: 16),
 
                 // CHECKBOX ADD-ONS
-                ...addOns.map((addon) {
+                ...addOns.where((s) => s.isRequired).map((addon) {
                   return Row(
                     children: [
                       SizedBox(
                         height: 24, width: 24,
                         child: Checkbox(
-                          value: selectedAddOnIds.contains(addon.id),
-                          onChanged: (bool? val) {
-                            setState(() {
-                              if (val == true) {
-                                selectedAddOnIds.add(addon.id);
-                              } else {
-                                selectedAddOnIds.remove(addon.id);
-                              }
-                            });
-                          },
+                          value: true,
+                          onChanged: null,
+                          fillColor: WidgetStateProperty.resolveWith((states) => const Color(0xFF0D2546)),
                         ),
                       ),
-                      Expanded(child: Text(addon.name, style: const TextStyle(fontSize: 11), overflow: TextOverflow.ellipsis)),
+                      Expanded(
+                        child: Text(
+                          addon.name, 
+                          style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600), 
+                          overflow: TextOverflow.ellipsis
+                        )
+                      ),
                     ],
                   );
                 }).toList(),
+
+                if (addOns.any((s) => !s.isRequired)) ...[
+                  const SizedBox(height: 20),
+                  const Text('add ons', style: TextStyle(fontSize: 12)),
+                  const SizedBox(height: 10),
+
+                  ...addOns.where((s) => !s.isRequired).map((addon) {
+                    return Row(
+                      children: [
+                        SizedBox(
+                          height: 24, width: 24,
+                          child: Checkbox(
+                            value: selectedAddOnIds.contains(addon.id),
+                            onChanged: (bool? val) {
+                              setState(() {
+                                if (val == true) {
+                                  selectedAddOnIds.add(addon.id);
+                                } else {
+                                  selectedAddOnIds.remove(addon.id);
+                                }
+                              });
+                            },
+                          ),
+                        ),
+                        Expanded(
+                          child: Text(
+                            addon.name, 
+                            style: const TextStyle(fontSize: 11), 
+                            overflow: TextOverflow.ellipsis
+                          )
+                        ),
+                      ],
+                    );
+                  }).toList(),
+                ],
               ],
             ),
           ),
@@ -178,6 +221,20 @@ class _CompareColumnState extends State<CompareColumn> {
           child: widget.isComparing
               ? ElevatedButton(
                   onPressed: () {
+                    if (selectedPackage != null) {
+                      List<ServiceModel> checkedAddOns = addOns.where((addon) => selectedAddOnIds.contains(addon.id)).toList();
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PaymentScreen(
+                            eo: widget.eo,
+                            package: selectedPackage!,
+                            addOns: checkedAddOns,
+                          ),
+                        ),
+                      );
+                    }
                   },
                   style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF0D2546), foregroundColor: Colors.white),
                   child: const Text('Choose this', style: TextStyle(fontSize: 12)),
