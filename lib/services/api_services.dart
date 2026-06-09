@@ -99,4 +99,78 @@ class ApiServices {
       return null;
     }
   }
+
+  //payment
+  Future<int?> createTransaction({
+    required int eoId,
+    required int packageId,
+    required List<int> selectedServices,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/transaction'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          "event_date": "2026-12-20", 
+          "event_location": "Jakarta", 
+          "eo_id": eoId,
+          "package_id": packageId,
+          "selected_services": selectedServices,
+        }),
+      );
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        final body = jsonDecode(response.body);
+        return body['data']['transaction_id'];
+      }
+      print('Gagal Create Transaction: ${response.body}');
+      return null;
+    } catch (e) {
+      print('Exception Transaction: $e');
+      return null;
+    }
+  }
+
+  Future<int?> createPayment(int transactionId, String paymentMethod) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/payments'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          "transaction_id": transactionId,
+          "payment_method": paymentMethod,
+        }),
+      );
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        final body = jsonDecode(response.body);
+        return body['data']['Payments_ID'];
+      }
+      print('Gagal Create Payment: ${response.body}');
+      return null;
+    } catch (e) {
+      print('Exception Payment: $e');
+      return null;
+    }
+  }
+
+
+  Future<bool> confirmPaymentSuccess(int paymentId) async {
+    try {
+      final response = await http.patch(
+        Uri.parse('$baseUrl/payments/$paymentId/success'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({"message": "Payment success"}),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return true;
+      }
+      print('Gagal Confirm Payment: ${response.body}');
+      return false;
+    } catch (e) {
+      print('Exception Confirm Payment: $e');
+      return false;
+    }
+  }
 }
