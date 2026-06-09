@@ -50,8 +50,18 @@ class _CompareColumnState extends State<CompareColumn> {
           packages.sort((a, b) => a.price.compareTo(b.price));
           selectedPackage = packages.first;
         }
+
+        final requiredServiceIds = addOns.where((s) => s.isRequired).map((s) => s.id);
+        for (var id in requiredServiceIds) {
+          if (!selectedAddOnIds.contains(id)) {
+            selectedAddOnIds.add(id);
+          }
+        }
+
         _isLoading = false;
       });
+    } else {
+      setState(() => _isLoading = false);
     }
   }
 
@@ -141,33 +151,65 @@ class _CompareColumnState extends State<CompareColumn> {
                   ),
                 ],
                 
-                const SizedBox(height: 20),
-                const Text('add ons', style: TextStyle(fontSize: 12)),
-                const SizedBox(height: 10),
+                const SizedBox(height: 16),
 
                 // CHECKBOX ADD-ONS
-                ...addOns.map((addon) {
+                ...addOns.where((s) => s.isRequired).map((addon) {
                   return Row(
                     children: [
                       SizedBox(
                         height: 24, width: 24,
                         child: Checkbox(
-                          value: selectedAddOnIds.contains(addon.id),
-                          onChanged: (bool? val) {
-                            setState(() {
-                              if (val == true) {
-                                selectedAddOnIds.add(addon.id);
-                              } else {
-                                selectedAddOnIds.remove(addon.id);
-                              }
-                            });
-                          },
+                          value: true,
+                          onChanged: null,
+                          fillColor: WidgetStateProperty.resolveWith((states) => const Color(0xFF0D2546)),
                         ),
                       ),
-                      Expanded(child: Text(addon.name, style: const TextStyle(fontSize: 11), overflow: TextOverflow.ellipsis)),
+                      Expanded(
+                        child: Text(
+                          addon.name, 
+                          style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600), 
+                          overflow: TextOverflow.ellipsis
+                        )
+                      ),
                     ],
                   );
                 }).toList(),
+
+                if (addOns.any((s) => !s.isRequired)) ...[
+                  const SizedBox(height: 20),
+                  const Text('add ons', style: TextStyle(fontSize: 12)),
+                  const SizedBox(height: 10),
+
+                  ...addOns.where((s) => !s.isRequired).map((addon) {
+                    return Row(
+                      children: [
+                        SizedBox(
+                          height: 24, width: 24,
+                          child: Checkbox(
+                            value: selectedAddOnIds.contains(addon.id),
+                            onChanged: (bool? val) {
+                              setState(() {
+                                if (val == true) {
+                                  selectedAddOnIds.add(addon.id);
+                                } else {
+                                  selectedAddOnIds.remove(addon.id);
+                                }
+                              });
+                            },
+                          ),
+                        ),
+                        Expanded(
+                          child: Text(
+                            addon.name, 
+                            style: const TextStyle(fontSize: 11), 
+                            overflow: TextOverflow.ellipsis
+                          )
+                        ),
+                      ],
+                    );
+                  }).toList(),
+                ],
               ],
             ),
           ),
