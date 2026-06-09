@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'search_screen.dart';
 import 'compare_screen.dart';
 import 'home_screen.dart';
+import 'chat_screen.dart';
+import 'userProfile_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -26,8 +28,8 @@ class _MainScreenState extends State<MainScreen> {
     HomeScreen(onSearchTabPressed: () => _changeTab(1)),
     const SearchScreen(),
     const CompareScreen(),
-    const Center(child: Text('Chat Page - Coming Soon')),
-    const Center(child: Text('Profile Page - Coming Soon')),
+    const Chats,
+    const ProfileScreen(),
     ];
     
     return Scaffold(
