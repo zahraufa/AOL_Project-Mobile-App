@@ -3,6 +3,7 @@ import '../models/event_organizer.dart';
 import '../models/package_model.dart';
 import '../models/service_model.dart';
 import '../services/api_services.dart';
+import 'package:eo_app/screens/payment_screen.dart';
 
 class CompareColumn extends StatefulWidget {
   final EventOrganizerModel eo;
@@ -178,6 +179,20 @@ class _CompareColumnState extends State<CompareColumn> {
           child: widget.isComparing
               ? ElevatedButton(
                   onPressed: () {
+                    if (selectedPackage != null) {
+                      List<ServiceModel> checkedAddOns = addOns.where((addon) => selectedAddOnIds.contains(addon.id)).toList();
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PaymentScreen(
+                            eo: widget.eo,
+                            package: selectedPackage!,
+                            addOns: checkedAddOns,
+                          ),
+                        ),
+                      );
+                    }
                   },
                   style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF0D2546), foregroundColor: Colors.white),
                   child: const Text('Choose this', style: TextStyle(fontSize: 12)),
