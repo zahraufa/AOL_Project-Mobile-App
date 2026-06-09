@@ -3,11 +3,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/event_organizer.dart';
 import '../models/package_model.dart';
 import '../services/api_services.dart';
-import 'search_screen.dart';
 import 'EOProfile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  final VoidCallback onSearchTabPressed;
+  const HomeScreen({Key? key, required this.onSearchTabPressed}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -138,12 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         left: 24,
                         right: 24,
                         child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => const SearchScreen()),
-                            );
-                          },
+                          onTap: widget.onSearchTabPressed,
                           child: Container(
                             height: 50,
                             padding: const EdgeInsets.symmetric(horizontal: 20),

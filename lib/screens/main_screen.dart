@@ -11,18 +11,25 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _currentIndex = 1;
+  int _currentIndex = 0;
 
-  final List<Widget> _pages = [
-    const HomeScreen(),
+  void _changeTab(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    final List<Widget> _pages = [
+    HomeScreen(onSearchTabPressed: () => _changeTab(1)),
     const SearchScreen(),
     const CompareScreen(),
     const Center(child: Text('Chat Page - Coming Soon')),
     const Center(child: Text('Profile Page - Coming Soon')),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
+    ];
+    
     return Scaffold(
       backgroundColor: Colors.white,
       body: _pages[_currentIndex], 
