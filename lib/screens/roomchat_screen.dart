@@ -37,7 +37,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
               image: DecorationImage(
                 image: AssetImage('assets/images/ballroom.jpg'),
                 fit: BoxFit.cover,
-                opacity: 0.3,
+                opacity: 0.2,
               ),
             ),
             child: SafeArea(

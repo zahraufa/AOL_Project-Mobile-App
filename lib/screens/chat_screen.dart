@@ -49,7 +49,7 @@ class _ChatScreenState extends State<ChatScreen> {
               image: DecorationImage(
                 image: AssetImage('assets/images/ballroom.jpg'),
                 fit: BoxFit.cover,
-                opacity: 0.3,
+                opacity: 0.2,
               ),
             ),
             child: const SafeArea(

@@ -28,7 +28,7 @@ class _MainScreenState extends State<MainScreen> {
     HomeScreen(onSearchTabPressed: () => _changeTab(1)),
     const SearchScreen(),
     const CompareScreen(),
-    const Chats,
+    const ChatScreen(),
     const ProfileScreen(),
     ];
     
