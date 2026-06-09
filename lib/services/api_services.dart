@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import '../models/signup_model.dart';
 import '../models/login_model.dart';
 import '../models/event_organizer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiServices {
   final String baseUrl = 'https://aolproject-mobile-app-production.up.railway.app';
@@ -39,7 +40,12 @@ class ApiServices {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        print('Login Success!');
+        final body = jsonDecode(response.body);
+        final String token = body['token']; 
+
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('token', token);
+
         return true; 
       } else {
         print('Login Error: ${response.body}');
@@ -100,6 +106,12 @@ class ApiServices {
     }
   }
 
+  //get token
+  Future<String?> _getToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token');
+  }
+
   //payment
   Future<int?> createTransaction({
     required int eoId,
@@ -107,6 +119,7 @@ class ApiServices {
     required List<int> selectedServices,
   }) async {
     try {
+      final token = await _getToken();
       final response = await http.post(
         Uri.parse('$baseUrl/transaction'),
         headers: {'Content-Type': 'application/json'},
@@ -133,6 +146,7 @@ class ApiServices {
 
   Future<int?> createPayment(int transactionId, String paymentMethod) async {
     try {
+      final token = await _getToken();
       final response = await http.post(
         Uri.parse('$baseUrl/payments'),
         headers: {'Content-Type': 'application/json'},
@@ -144,7 +158,7 @@ class ApiServices {
 
       if (response.statusCode == 201 || response.statusCode == 200) {
         final body = jsonDecode(response.body);
-        return body['data']['Payments_ID'];
+        return body['data']['Payments_ID'] ?? body['data']['payments_id'];
       }
       print('Gagal Create Payment: ${response.body}');
       return null;
@@ -157,9 +171,13 @@ class ApiServices {
 
   Future<bool> confirmPaymentSuccess(int paymentId) async {
     try {
+      final token = await _getToken();
       final response = await http.patch(
         Uri.parse('$baseUrl/payments/$paymentId/success'),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
         body: jsonEncode({"message": "Payment success"}),
       );
 
