@@ -21,27 +21,15 @@ class MyApp extends StatelessWidget {
       ),
       
       builder: (context, child) {
-        return Scaffold(
-          backgroundColor: const Color.fromARGB(255, 107, 107, 107),
-          body: Center(
-            child: Container(
-              width: 402,
-              height: 874,
-              clipBehavior: Clip.antiAlias,
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 117, 117, 117),
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 20,
-                    spreadRadius: 5,
-                  ),
-                ],
-              ),
-              child: child, 
+        return Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(
+              maxWidth: 414,
             ),
-          ),
+            child: ClipRect(
+              child: child,
+            ),
+          ),        
         );
       },
 
