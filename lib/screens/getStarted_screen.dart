@@ -68,6 +68,7 @@ class WelcomeScreen extends StatelessWidget {
                 width: double.infinity,
                 height: size.height * 0.45,
                 padding: const EdgeInsets.fromLTRB(32, 60, 32, 32),
+                child: SingleChildScrollView(
                 child: Column(
                   children: [
                     const Text(
@@ -116,6 +117,7 @@ class WelcomeScreen extends StatelessWidget {
                       },
                     ),
                   ],
+                ),
                 ),
               ),
             ),
